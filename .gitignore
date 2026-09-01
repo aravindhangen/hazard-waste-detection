@@ -33,5 +33,22 @@ Thumbs.db
 # Stray Ultralytics validation outputs (not part of documented runs)
 runs/segment/
 
-# Large local-only caches (weights copied explicitly for Docker)
-# Keep trained run artifacts; ignore only ad-hoc segment dumps above.
+# Datasets (keep data.yaml only; images not needed for Render deploy)
+hazard_dataset/
+hazard_dataset_clean/images/
+hazard_dataset_clean/labels/
+
+# Nested vendor git metadata
+yolov9/.git/
+
+# YOLOv9 training artifacts (production weight tracked via LFS)
+yolov9/runs/train-seg/**/*
+!yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+yolov9/runs/val-seg/
+yolov9/runs/predict-seg/
+
+# Ultralytics duplicate train weights (canonical copies in runs/*/weights/)
+runs/yolo11s_run2/train/
+runs/yolov8s_run3/train/
+runs/yolo11s_run2/evaluation/
+runs/yolov8s_run3/evaluation/
