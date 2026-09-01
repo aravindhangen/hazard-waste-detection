@@ -1,0 +1,38 @@
+{
+  "generated": "2026-08-28T20:58:27",
+  "priority": [
+    "cylinder_recall",
+    "map50",
+    "map50_95",
+    "fps"
+  ],
+  "meaningful_delta": 0.03,
+  "run1": {
+    "name": "Run 1 (official)",
+    "model": "YOLOv9 GELAN-C-SEG",
+    "cylinder_recall": 0.734,
+    "map50": 0.732,
+    "map50_95": 0.51,
+    "f1": 0.7323494880546075,
+    "recall": 0.722,
+    "precision": 0.743,
+    "fps": 22.935779816513765,
+    "weights": "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt"
+  },
+  "run2": {
+    "name": "Run 2 (experimental)",
+    "model": "YOLO11s-Seg",
+    "cylinder_recall": 0.7137,
+    "map50": 0.6432935536508803,
+    "map50_95": 0.443539721461175,
+    "f1": 0.6742746413823387,
+    "recall": 0.6484470178681907,
+    "precision": 0.7022450382904334,
+    "fps": 26.553665917293603,
+    "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolo11s_run2\\weights\\best_yolo11s.pt"
+  },
+  "recommendation": "Keep Run 1 (YOLOv9) as production model.",
+  "reasons": [
+    "Cylinder recall decreased (0.734 -> 0.714). Safety priority favors keeping Run 1."
+  ]
+}

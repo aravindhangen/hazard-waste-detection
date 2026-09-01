@@ -1,0 +1,8 @@
+# API / deployment dependencies (install after requirements-train.txt)
+# Usage:
+#   pip install -r requirements-api.txt
+
+-r requirements-train.txt
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9

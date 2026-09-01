@@ -1,0 +1,19 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploy: connect this GitHub repo in Render → New → Blueprint → select render.yaml
+services:
+  - type: web
+    name: hazard-waste-detection
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    plan: standard
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: HAZARD_DEVICE
+        value: cpu
+      - key: KMP_DUPLICATE_LIB_OK
+        value: "TRUE"
+      - key: PYTHONPATH
+        value: /app
+      - key: HAZARD_CONF_THRESHOLD
+        value: "0.25"

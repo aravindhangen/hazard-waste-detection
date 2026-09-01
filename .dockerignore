@@ -1,0 +1,45 @@
+# Exclude large / local-only artifacts from Docker build context
+.venv
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Datasets (only data.yaml is copied explicitly in Dockerfile)
+hazard_dataset/
+hazard_dataset_clean/images/
+hazard_dataset_clean/labels/
+
+# Training outputs not needed at runtime (weights copied explicitly)
+yolov9/runs/train-seg/**/*
+!yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+yolov9/runs/val-seg/
+yolov9/runs/predict-seg/
+
+# Reports and notebooks (comparison JSON copied explicitly in Dockerfile)
+evaluation_reports/
+visual_qa/
+notebooks/
+reports/
+pretrained/
+*.ipynb
+
+# Legacy root paths (moved to reports/ and notebooks/)
+duplicate_removal_report.txt
+
+# Git / IDE
+.git
+.gitignore
+.cursor
+.vscode
+
+# Docs (keep render.yaml and Dockerfiles in context)
+docs/
+*.md
+!README.md
+
+# OS
+Thumbs.db
+.DS_Store

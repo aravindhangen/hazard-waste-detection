@@ -1,0 +1,8 @@
+path: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\hazard_dataset
+train: images/train
+val: images/val
+test: images/test
+nc: 2
+names:
+- Cylinder
+- Shock_Absorber

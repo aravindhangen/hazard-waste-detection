@@ -1,0 +1,71 @@
+{
+  "generated": "2026-08-28T23:02:14",
+  "runs": [
+    {
+      "run_id": "run1",
+      "name": "Run 1 (production)",
+      "model": "YOLOv9 GELAN-C-SEG",
+      "cylinder_recall": 0.734,
+      "map50": 0.732,
+      "map50_95": 0.51,
+      "recall": 0.722,
+      "precision": 0.743,
+      "fps": 22.935779816513765,
+      "weights": "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt",
+      "available": true
+    },
+    {
+      "run_id": "run2",
+      "name": "Run 2 (YOLO11s)",
+      "model": "YOLO11s-Seg",
+      "cylinder_recall": 0.7137,
+      "map50": 0.6432935536508803,
+      "map50_95": 0.443539721461175,
+      "recall": 0.6484470178681907,
+      "precision": 0.7022450382904334,
+      "fps": 26.553665917293603,
+      "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolo11s_run2\\weights\\best_yolo11s.pt",
+      "available": true
+    },
+    {
+      "run_id": "run3",
+      "name": "Run 3 (YOLOv8s)",
+      "model": "YOLOv8s-Seg",
+      "cylinder_recall": 0.72,
+      "map50": 0.6556976349248286,
+      "map50_95": 0.44983023172442876,
+      "recall": 0.6634188034188033,
+      "precision": 0.6993594352811834,
+      "fps": 68.68084100092392,
+      "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolov8s_run3\\weights\\best_yolov8s.pt",
+      "available": true
+    }
+  ],
+  "best_cylinder_recall": {
+    "run_id": "run1",
+    "name": "Run 1 (production)",
+    "model": "YOLOv9 GELAN-C-SEG",
+    "cylinder_recall": 0.734,
+    "map50": 0.732,
+    "map50_95": 0.51,
+    "recall": 0.722,
+    "precision": 0.743,
+    "fps": 22.935779816513765,
+    "weights": "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt",
+    "available": true
+  },
+  "best_map50": {
+    "run_id": "run1",
+    "name": "Run 1 (production)",
+    "model": "YOLOv9 GELAN-C-SEG",
+    "cylinder_recall": 0.734,
+    "map50": 0.732,
+    "map50_95": 0.51,
+    "recall": 0.722,
+    "precision": 0.743,
+    "fps": 22.935779816513765,
+    "weights": "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt",
+    "available": true
+  },
+  "run3_available": true
+}

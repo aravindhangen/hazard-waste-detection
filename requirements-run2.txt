@@ -1,0 +1,7 @@
+# Run 2 optional dependencies (YOLO11s-Seg challenger experiment)
+# Usage:
+#   pip install -r requirements-run2.txt
+#   python 09_train_yolo11_run2.py --device 0
+
+-r requirements-train.txt
+ultralytics>=8.3.0

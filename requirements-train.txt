@@ -1,0 +1,14 @@
+# Training dependencies (install after base requirements.txt)
+# Usage:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r requirements-train.txt
+
+-r requirements.txt
+tqdm
+seaborn
+psutil
+thop
+albumentations
+pycocotools
+gitpython
+tensorboard

@@ -1,0 +1,58 @@
+Hazard Waste Detection - YOLOv9 Segmentation Evaluation Report
+Generated: 2026-08-28T18:17:53
+
+Environment
+  PyTorch: 2.6.0+cu124
+  CUDA available: True
+  Hardware: NVIDIA GeForce RTX 4050 Laptop GPU
+
+Dataset
+  Root: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\hazard_dataset_clean
+  Total unique images: 393
+  Total object instances: 2164
+  Train: 275 images
+  Val: 79 images
+  Test: 39 images
+  Cylinder instances: 1167
+  Shock_Absorber instances: 997
+
+Model
+  Weights: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\yolov9\runs\train-seg\hazard_waste_seg\weights\best.pt
+  Architecture: models/segment/gelan-c-seg.yaml
+  Image size: 640 x 640
+
+Validation metrics (segmentation masks)
+  Precision: 0.7690
+  Recall:    0.7430
+  F1:        0.7558
+  mAP@50:    0.7840
+  mAP@50:95: 0.5600
+
+Test metrics (segmentation masks)
+  Precision: 0.7430
+  Recall:    0.7220
+  F1:        0.7323
+  mAP@50:    0.7320
+  mAP@50:95: 0.5100
+
+Per-class test metrics (masks)
+  Cylinder:
+    Precision: 0.6650
+    Recall:    0.7340
+    F1:        0.6978
+    mAP@50:    0.7110
+    mAP@50:95: 0.6130
+  Shock_Absorber:
+    Precision: 0.8210
+    Recall:    0.7090
+    F1:        0.7609
+    mAP@50:    0.7540
+    mAP@50:95: 0.4070
+
+Inference performance
+  Image size: 640 x 640
+  Average inference time: 43.60 ms
+  Approximate FPS: 22.94
+
+Saved artifacts
+  test_confusion_matrix.png: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\evaluation_reports\test_confusion_matrix.png

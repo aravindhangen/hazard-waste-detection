@@ -1,0 +1,100 @@
+{
+  "gpu": {
+    "torch_version": "2.6.0+cu124",
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "device_count": 1
+  },
+  "dataset": {
+    "splits": {
+      "train": {
+        "images": 275,
+        "labels": 275,
+        "errors": 0
+      },
+      "val": {
+        "images": 79,
+        "labels": 79,
+        "errors": 0
+      },
+      "test": {
+        "images": 39,
+        "labels": 39,
+        "errors": 0
+      }
+    },
+    "total_images": 393,
+    "total_instances": 2164,
+    "errors": 0,
+    "class_totals": {
+      "Cylinder": 1167,
+      "Shock_Absorber": 997
+    }
+  },
+  "validation": {
+    "split": "val",
+    "images": 79,
+    "instances": 432,
+    "precision_box": 0.769,
+    "recall_box": 0.75,
+    "map50_box": 0.79,
+    "map_box": 0.636,
+    "precision_mask": 0.769,
+    "recall_mask": 0.743,
+    "map50_mask": 0.784,
+    "map_mask": 0.56,
+    "f1_mask": 0.755776455026455,
+    "per_class": {
+      "Cylinder": {
+        "precision": 0.763,
+        "recall": 0.845,
+        "f1": 0.8019092039800993,
+        "map50": 0.838,
+        "map50_95": 0.697
+      },
+      "Shock_Absorber": {
+        "precision": 0.776,
+        "recall": 0.641,
+        "f1": 0.7020691601976006,
+        "map50": 0.729,
+        "map50_95": 0.424
+      }
+    },
+    "inference_ms": 3.1
+  },
+  "test": {
+    "split": "test",
+    "images": 39,
+    "instances": 217,
+    "precision_box": 0.741,
+    "recall_box": 0.723,
+    "map50_box": 0.752,
+    "map_box": 0.554,
+    "precision_mask": 0.743,
+    "recall_mask": 0.722,
+    "map50_mask": 0.732,
+    "map_mask": 0.51,
+    "f1_mask": 0.7323494880546075,
+    "per_class": {
+      "Cylinder": {
+        "precision": 0.665,
+        "recall": 0.734,
+        "f1": 0.6977984274481773,
+        "map50": 0.711,
+        "map50_95": 0.613
+      },
+      "Shock_Absorber": {
+        "precision": 0.821,
+        "recall": 0.709,
+        "f1": 0.7609006535947713,
+        "map50": 0.754,
+        "map50_95": 0.407
+      }
+    },
+    "inference_ms": 4.4
+  },
+  "inference_ms": 43.599999999999994,
+  "artifacts": {
+    "test_confusion_matrix.png": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\evaluation_reports\\test_confusion_matrix.png"
+  }
+}

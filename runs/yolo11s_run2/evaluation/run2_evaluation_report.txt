@@ -1,0 +1,55 @@
+Hazard Waste Detection - Run 2 YOLO11s-Seg Evaluation Report
+Generated: 2026-08-28T20:12:11
+
+NOTE: Experimental challenger only. Run 1 (YOLOv9) remains the official baseline.
+
+Environment
+  PyTorch: 2.6.0+cu124
+  CUDA available: True
+  Hardware: NVIDIA GeForce RTX 4050 Laptop GPU
+
+Dataset (frozen)
+  Root: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\hazard_dataset_clean
+  Split: 275 train / 79 val / 39 test
+
+Model
+  Architecture: YOLO11s-Seg
+  Weights: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\runs\yolo11s_run2\weights\best_yolo11s.pt
+  Image size: 640 x 640
+  Epochs: 100
+  Batch size: 8
+
+Validation metrics (segmentation masks)
+  Precision: 0.6713
+  Recall:    0.6984
+  F1:        0.6846
+  mAP@50:    0.7222
+  mAP@50:95: 0.5221
+
+Test metrics (segmentation masks)
+  Precision: 0.7022
+  Recall:    0.6484
+  F1:        0.6743
+  mAP@50:    0.6433
+  mAP@50:95: 0.4435
+
+Per-class test metrics (masks)
+  Cylinder:
+    Precision: 0.6647
+    Recall:    0.7137
+    F1:        0.6883
+    mAP@50:    0.7322
+    mAP@50:95: 0.6043
+  Shock_Absorber:
+    Precision: 0.7398
+    Recall:    0.5832
+    F1:        0.6522
+    mAP@50:    0.6877
+    mAP@50:95: 0.3890
+
+Inference performance
+  Average inference time: 37.66 ms
+  Approximate FPS: 26.55
+
+Official Run 1 report (unchanged):
+  C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\evaluation_reports\final_evaluation_report.json

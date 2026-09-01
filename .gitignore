@@ -1,0 +1,37 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.idea/
+.vscode/
+.cursor/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Stray Ultralytics validation outputs (not part of documented runs)
+runs/segment/
+
+# Large local-only caches (weights copied explicitly for Docker)
+# Keep trained run artifacts; ignore only ad-hoc segment dumps above.

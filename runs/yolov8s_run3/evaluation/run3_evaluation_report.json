@@ -1,0 +1,67 @@
+{
+  "run": "yolov8s_run3",
+  "model": "YOLOv8s-Seg",
+  "gpu": {
+    "torch_version": "2.6.0+cu124",
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolov8s_run3\\weights\\best_yolov8s.pt",
+  "validation": {
+    "split": "val",
+    "precision_mask": 0.6931168664266125,
+    "recall_mask": 0.6755208333333333,
+    "f1_mask": 0.6842057372641674,
+    "map50_mask": 0.7038106770968209,
+    "map_mask": 0.5133393595135799,
+    "per_class": {
+      "Cylinder": {
+        "precision": 0.7176,
+        "recall": 0.7833,
+        "f1": 0.7490120327803317,
+        "map50": 0.8022,
+        "map50_95": 0.6911
+      },
+      "Shock_Absorber": {
+        "precision": 0.6687,
+        "recall": 0.5677,
+        "f1": 0.6140747169200906,
+        "map50": 0.6171,
+        "map50_95": 0.4168
+      }
+    },
+    "inference_ms": null
+  },
+  "test": {
+    "split": "test",
+    "precision_mask": 0.6993594352811834,
+    "recall_mask": 0.6634188034188033,
+    "f1_mask": 0.6809151871349106,
+    "map50_mask": 0.6556976349248286,
+    "map_mask": 0.44983023172442876,
+    "per_class": {
+      "Cylinder": {
+        "precision": 0.646,
+        "recall": 0.72,
+        "f1": 0.6809956076134699,
+        "map50": 0.7035,
+        "map50_95": 0.5815
+      },
+      "Shock_Absorber": {
+        "precision": 0.7528,
+        "recall": 0.6068,
+        "f1": 0.6719609296852016,
+        "map50": 0.6776,
+        "map50_95": 0.3964
+      }
+    },
+    "inference_ms": null
+  },
+  "inference_ms": 14.560101265890843,
+  "training": {
+    "epochs": 100,
+    "batch_size": 8,
+    "img_size": 640
+  },
+  "official_run1_report": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\evaluation_reports\\final_evaluation_report.json"
+}

@@ -1,0 +1,22 @@
+Hazard Waste Detection — All Runs Comparison
+Generated: 2026-08-28T23:02:14
+
+Priority: Cylinder Recall > mAP@50 > mAP@50:95 > FPS
+Meaningful delta threshold: 0.03 on 39-image test set
+
+Run                    Model              Cyl.Recall   mAP@50   Recall      FPS
+------------------------------------------------------------------------------
+Run 1 (production)     YOLOv9 GELAN-C-SEG      0.734    0.732    0.722   22.936
+Run 2 (YOLO11s)        YOLO11s-Seg             0.714    0.643    0.648   26.554
+Run 3 (YOLOv8s)        YOLOv8s-Seg             0.720    0.656    0.663   68.681
+
+Leaders on held-out test set
+  Best Cylinder recall: YOLOv9 GELAN-C-SEG (0.734)
+  Best mAP@50:          YOLOv9 GELAN-C-SEG (0.732)
+
+Production recommendation
+  Keep YOLOv9 as production unless a challenger clearly beats it on Cylinder recall
+  AND overall mAP@50 without sacrificing safety-aligned metrics.
+
+Official production weights (unchanged):
+  yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt

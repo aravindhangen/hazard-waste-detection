@@ -1,0 +1,8 @@
+numpy
+pillow
+matplotlib
+opencv-python
+imagehash
+pandas
+pyyaml
+jupyter

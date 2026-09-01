@@ -1,0 +1,30 @@
+{
+  "description": "Prepared presentation demo images from held-out test set",
+  "images": [
+    {
+      "file": "demo/01_clear_cylinder.jpg",
+      "scenario": "clear_cylinder",
+      "notes": "Single cylinder — good for first detection demo"
+    },
+    {
+      "file": "demo/02_multiple_cylinders.jpg",
+      "scenario": "multiple_cylinders",
+      "notes": "Multiple cylinder instances"
+    },
+    {
+      "file": "demo/03_shock_absorber.jpg",
+      "scenario": "shock_absorber",
+      "notes": "Shock absorber — toxic hazard class"
+    },
+    {
+      "file": "demo/04_mixed_scrap.jpg",
+      "scenario": "mixed_scrap",
+      "notes": "Cylinder + shock absorber in same scene"
+    },
+    {
+      "file": "demo/05_busy_scene.jpg",
+      "scenario": "busy_scene",
+      "notes": "Busy scrap scene with multiple objects"
+    }
+  ]
+}

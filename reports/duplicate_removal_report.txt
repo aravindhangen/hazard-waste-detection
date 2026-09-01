@@ -1,0 +1,477 @@
+Hazard Waste Detection - Deduplication and Resplit Report
+Generated: 2026-08-28T08:29:06
+
+Source dataset: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\hazard_dataset
+Output dataset: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\hazard_dataset_clean
+
+SUMMARY (before cleanup)
+  Original images: 512
+  Duplicate groups: 107
+  Cross-split leakage groups: 54
+  Malformed annotation lines (detected): 4
+
+DUPLICATE GROUP ACTIONS
+
+Hash 80a46ddbe19b8de1:
+  KEEP [train] scrap_Screenshot-2025-02-16-235845_png_png.rf.85a4c794042118e5dca70cbc5f1256cc.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235845_png_png.rf.04f0d38cfa735b53367e10680d4032bd.jpg
+
+Hash 811ac2ea1bf3fc49:
+  KEEP [val] shock_Screenshot-2025-02-16-234825_png_png.rf.d1bb4e014d10d85da5d41c153ed63e7a.jpg
+  DROP [train] shock_Screenshot-2025-02-16-234825_png_png.rf.39dc50286f3e9f9f1cf70ed5fc878c64.jpg
+
+Hash 824386ce2de6bb78:
+  KEEP [train] scrap_Screenshot-2025-02-17-043322_png_png.rf.f0863024d2b34814d7cfd704ea381397.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043322_png_png.rf.0f210713af0588bf83b52793841e05ae.jpg
+
+Hash 83739db146d6570c:
+  KEEP [train] scrap_Screenshot-2025-02-17-044316_png_png.rf.b8f22f2431ca9ff3b14087bf3db0b985.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-044316_png_png.rf.b369d176cf8176651f9f49b6cbad81d9.jpg
+
+Hash 83974d881f35d569:
+  KEEP [train] scrap_Screenshot-2025-02-17-045702_png_png.rf.cfc45d19867376f8c1b17a6c15c4501c.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-045702_png_png.rf.7080e75c1ecd38b5e87fb253c4044159.jpg
+
+Hash 841a68eb9f6d6c29:
+  KEEP [val] shock_Screenshot-2025-02-16-231857_png_png.rf.7c821c58efb82aea5c5f4ac72f60b707.jpg
+  DROP [train] shock_Screenshot-2025-02-16-231857_png_png.rf.0a867e253275c514c0b2082fad6cecbe.jpg
+
+Hash 84383367c94f7f42:
+  KEEP [test] scrap_Screenshot-2025-02-17-043001_png_png.rf.e778b165edab51477b28e924ac9265e9.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043001_png_png.rf.d427d160c783e56455cb68d00f08edb2.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043001_png_png.rf.ab2d2cbb613c2fd912bb468e811cb484.jpg
+
+Hash 843f3c7b63129e85:
+  KEEP [train] scrap_Screenshot-2025-02-17-043013_png_png.rf.de5f31de646df174fcc6787f3d1a038b.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043013_png_png.rf.a033dde7db2a190698de02ef56c1b4d2.jpg
+
+Hash 85356aa67ac354cb:
+  KEEP [val] scrap_Screenshot-2025-02-16-235555_png_png.rf.8e49582a28699674f41c7249f459264b.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235555_png_png.rf.1822d005d3f9bd2a6254fe1be571ba47.jpg
+
+Hash 85d3c378672133b9:
+  KEEP [val] shock_Screenshot-2025-02-16-222934_png_png.rf.a7fb71ec349cf51c5bb94aa08c13ae39.jpg
+  DROP [train] shock_Screenshot-2025-02-16-222934_png_png.rf.7db1b9db293bb078ece82ce0160630f2.jpg
+
+Hash 8638b56cecae9c16:
+  KEEP [test] scrap_Screenshot-2025-02-16-225244_png_png.rf.5f35d80e72283ba03775f0126f4054aa.jpg
+  DROP [test] scrap_Screenshot-2025-02-16-225244_png_png.rf.5e41042052850d646ef4afb58041ec53.jpg
+
+Hash 87023edd987fc624:
+  KEEP [val] scrap_Screenshot-2025-02-17-043251_png_png.rf.8e71490a6ec5116bdb53c57f412f24f0.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043251_png_png.rf.174d4c9ee169f516e313bfec48540634.jpg
+
+Hash 8889f2e905d2cfba:
+  KEEP [val] shock_Screenshot-2025-02-16-230717_png_png.rf.aca616048862bc0db6ff4b52d5c26c41.jpg
+  DROP [train] shock_Screenshot-2025-02-16-230717_png_png.rf.0a6931c70c41f7f3d7f0cd165df32c52.jpg
+
+Hash 888f65eb759c9c42:
+  KEEP [train] shock_Screenshot-2025-02-16-235013_png_png.rf.84d4f451a3c5bd4000885ab887ce7918.jpg
+  DROP [test] shock_Screenshot-2025-02-16-235013_png_png.rf.1ef91d40b68f4eccd26ab489a1d7f549.jpg
+
+Hash 889ea6ea256396b9:
+  KEEP [train] shock_Screenshot-2025-02-16-230047_png_png.rf.eb76039dc8e99f1f3ac59fea05be22f8.jpg
+  DROP [train] shock_Screenshot-2025-02-16-230047_png_png.rf.c37d433c85f158197d43aae37ec5481f.jpg
+
+Hash 8a4ef864d9b9741c:
+  KEEP [test] scrap_Screenshot-2025-02-17-000620_png_png.rf.d2664c431ebde2e4ddd6eabf4b465946.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-000620_png_png.rf.36514fbc3ec6fa9e5213f93ffc8f06d6.jpg
+
+Hash 8b647db5e0665aa1:
+  KEEP [train] shock_Screenshot-2025-02-16-231517_png_png.rf.6279b2283c84d5371094f2b73c0ee8c1.jpg
+  DROP [train] shock_Screenshot-2025-02-16-231517_png_png.rf.05a49f83500c3fae196bbf807b8defa7.jpg
+
+Hash 8bea2b4497e90f25:
+  KEEP [train] scrap_Screenshot-2025-02-16-235851_png_png.rf.b99b573733e116611dc04356bb148acc.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235851_png_png.rf.3f6676deecc6144baa176d735454097f.jpg
+
+Hash 8cf68e92394dee24:
+  KEEP [train] shock_Screenshot-2025-02-16-230724_png_png.rf.fc66f8690898d5acb427b328c8abe3ef.jpg
+  DROP [train] shock_Screenshot-2025-02-16-230724_png_png.rf.4353306be2d8c452fb9b017fa0e5d5bc.jpg
+
+Hash 8d225ede89f29e48:
+  KEEP [train] scrap_Screenshot-2025-02-17-042446_png_png.rf.f89c744054dd171dfceb54400582e369.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042446_png_png.rf.655229f6c0500a17d5e778387b3d0ec3.jpg
+
+Hash 8db64e89c49d139b:
+  KEEP [val] scrap_Screenshot-2025-02-17-042917_png_png.rf.edbfffb9ece56080e5bfe630572f0fdd.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-042917_png_png.rf.15fb1ba2ff9952cfe32839d2f5bd3de2.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-042917_png_png.rf.5c4079243c0d5b8c18338811caeb5acc.jpg
+
+Hash 8e8671b843fb8547:
+  KEEP [train] scrap_Screenshot-2025-02-16-225110_png_png.rf.6de9b452efe4bfbbaef1ebcc8efc40e2.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-225110_png_png.rf.16f5964b3dbd1d8566917737400130d4.jpg
+
+Hash 8e873399d44acd69:
+  KEEP [test] scrap_Screenshot-2025-02-17-043904_png_png.rf.a765d1b12afa7d16e9f2255d611e1e11.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043904_png_png.rf.a68b1aac2c8e4968d1bd95e08ec2bf30.jpg
+
+Hash 8e952d496372f1ca:
+  KEEP [train] scrap_Screenshot-2025-02-17-043739_png_png.rf.ef8856a98e7dc230e1fe86d39c9fe1a5.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043739_png_png.rf.00e47d91e79b332f7243e4e082f2574b.jpg
+
+Hash 908fd7dd8e42192d:
+  KEEP [train] shock_Screenshot-2025-02-16-222859_png_png.rf.7fa29390c4457d501cf1716fbe48e528.jpg
+  DROP [test] shock_Screenshot-2025-02-16-222859_png_png.rf.1a404c0b831f8f33098b1eb56ea7edde.jpg
+
+Hash 90a7cc963795746c:
+  KEEP [train] scrap_Screenshot-2025-02-17-050737_png_png.rf.f4679f85ee97d14297d478bf0cfae565.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050737_png_png.rf.0b77116dc1a8ff2e19c8cbe0b5fd2376.jpg
+
+Hash 94670adcf1ada135:
+  KEEP [train] shock_Screenshot-2025-02-16-225701_png_png.rf.f46e90871693b1c6ab2e10e671857ff5.jpg
+  DROP [train] shock_Screenshot-2025-02-16-225701_png_png.rf.328428a2372dcbc1c45a6920e160ceea.jpg
+
+Hash 94b9378e6c24325f:
+  KEEP [train] scrap_Screenshot-2025-02-17-045325_png_png.rf.78cf4751c1372cfe0107ae4f9980c8fe.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-045325_png_png.rf.73302c864390e5261224a08b3b1e344d.jpg
+
+Hash 9592363537cc6c5a:
+  KEEP [train] scrap_Screenshot-2025-02-16-235240_png_png.rf.bb2b6c592849f59a8d9407785f7aa547.jpg
+  DROP [test] scrap_Screenshot-2025-02-16-235240_png_png.rf.06092cd39edcd98a9cf03ec57996167f.jpg
+
+Hash 95b26c097d0d359e:
+  KEEP [train] scrap_Screenshot-2025-02-17-043846_png_png.rf.d245f008b628e581599a4e2ed955dad1.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043846_png_png.rf.22e5c1b1bb69ed08815725313c3febe3.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043846_png_png.rf.6e606d3299352e83c8e1af0daec24835.jpg
+
+Hash 9638b0e333dc8cd6:
+  KEEP [train] shock_Screenshot-2025-02-16-224818_png_png.rf.e25b221eb8dfc541afdb365a21bd6a30.jpg
+  DROP [train] shock_Screenshot-2025-02-16-224818_png_png.rf.5f9b38a88616b74dc83d3006c80df1fd.jpg
+
+Hash 965a4b4bf692326c:
+  KEEP [val] scrap_Screenshot-2025-02-17-043819_png_png.rf.bb9ff1a4b6831bb38ebf60582c41909c.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043819_png_png.rf.4e8b28bdd557996c09f1ad032b5551f3.jpg
+
+Hash 96d96f8718393634:
+  KEEP [val] scrap_Screenshot-2025-02-17-000013_png_png.rf.f678fdebea31049a51c7c35c20039bd3.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-000013_png_png.rf.1d2e3f52613861c3b26bf2fab7c9e7e5.jpg
+
+Hash 97e23b9d4c7212ac:
+  KEEP [train] scrap_Screenshot-2025-02-17-042608_png_png.rf.e8667d6477b73d3be322e51452fe81b9.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-042608_png_png.rf.c8bbfbbcf16018a135482b541e512d0f.jpg
+
+Hash 9848f296cbd24ed5:
+  KEEP [train] scrap_Screenshot-2025-02-17-050359_png_png.rf.a80aa23006d286370bb37100ffc81bbc.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-050359_png_png.rf.1cd9f4de0f3fef4d87d4d66cc86d7923.jpg
+
+Hash 9976a591e63bc264:
+  KEEP [train] scrap_Screenshot-2025-02-16-235620_png_png.rf.c50a5d81295ed7bd3bd877b406ae9d70.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235620_png_png.rf.51ef0e754bbfe65645a9d8e334fd5214.jpg
+  DROP [val] scrap_Screenshot-2025-02-16-235620_png_png.rf.61f04e75768e32e2b69d1e3ad771d8a1.jpg
+
+Hash 9a5366a4bb964d32:
+  KEEP [val] shock_Screenshot-2025-02-16-225518_png_png.rf.54eca3bfb09d92efbe2e80640b28fe3a.jpg
+  DROP [val] shock_Screenshot-2025-02-16-225518_png_png.rf.018e980436431e4dfec7d2114c6a1932.jpg
+
+Hash 9a6161de6269e587:
+  KEEP [val] scrap_Screenshot-2025-02-17-043750_png_png.rf.c711ee6ec809ea77d622d4e819307880.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043750_png_png.rf.43e3463725656c8cddf342edbcf299ad.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043750_png_png.rf.b1ee68c9fe8f13cf15cf2539ee7edef8.jpg
+
+Hash 9a619e7e349e58e0:
+  KEEP [train] scrap_Screenshot-2025-02-17-043759_png_png.rf.a7b006ac52689aa1e9d218bea7e7f43d.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043759_png_png.rf.10d22eb7bfd13fa63a6066e35cd22e0a.jpg
+
+Hash 9a628ccd874e634f:
+  KEEP [train] scrap_Screenshot-2025-02-17-041613_png_png.rf.3e2134e709769c6f69bb3b8fd578d2aa.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-041613_png_png.rf.10cb9e3d2409b90e9e5529730fabb40f.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-041613_png_png.rf.2b73dff3ed84f80bb733970426f2d842.jpg
+
+Hash 9a6ad581d294f23e:
+  KEEP [train] scrap_Screenshot-2025-02-17-000020_png_png.rf.836b11f35a3c1ef30e0ffa970bb50281.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-000020_png_png.rf.414f45d4f686aa04efd4eaaa10aa67db.jpg
+
+Hash 9e2506ddca4b9f42:
+  KEEP [train] scrap_Screenshot-2025-02-17-050253_png_png.rf.5c7aa790e7c11acfd5f32a2bdd683183.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050253_png_png.rf.4db90ec1d9dc97bdf64cd6226b8239fa.jpg
+
+Hash 9e2a2c4f4b9ed251:
+  KEEP [train] scrap_Screenshot-2025-02-16-235814_png_png.rf.55efaf5dff1543dc1dd079e5cf911a84.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235814_png_png.rf.1f53bdb0d2494523c55b221ca20c0a70.jpg
+
+Hash 9f80f3f945b05d42:
+  KEEP [train] scrap_Screenshot-2025-02-16-235833_png_png.rf.ea3e58ed5120b85f2441593307682d44.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235833_png_png.rf.85861faaacc685072b5d105f2944dae5.jpg
+  DROP [val] scrap_Screenshot-2025-02-16-235833_png_png.rf.70cce79350f5e8f11c67b94d19c11448.jpg
+
+Hash a2abace4d3b9464a:
+  KEEP [train] scrap_Screenshot-2025-02-17-043923_png_png.rf.f6ccc6dd932201b3b79d3bfeda4d1a04.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-043923_png_png.rf.1e800e162ee56a7ab58e24b3ce9cc960.jpg
+
+Hash a3dc2f91728d0d6c:
+  KEEP [test] scrap_Screenshot-2025-02-17-042755_png_png.rf.74028855b51b1448af81faf0b74aa7b9.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042755_png_png.rf.0c6841854c5beac8d71dd20ed45f9008.jpg
+
+Hash a60955cab954ad57:
+  KEEP [train] scrap_Screenshot-2025-02-17-041634_png_png.rf.f02e17722d0d20147a8794147f7dd339.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-041634_png_png.rf.651bcf25737b207c94646468a26d4d60.jpg
+
+Hash ab57a1e28e08b74e:
+  KEEP [train] shock_Screenshot-2025-02-16-225044_png_png.rf.981137affa0a0367e5ecb629b0db869f.jpg
+  DROP [train] shock_Screenshot-2025-02-16-225044_png_png.rf.2276a1d370c93084c9b7c261464d2848.jpg
+
+Hash aca2acd3f4ca57c0:
+  KEEP [train] shock_Screenshot-2025-02-16-230628_png_png.rf.875b1d83fbf24139327cd05e8e152f44.jpg
+  DROP [train] shock_Screenshot-2025-02-16-230628_png_png.rf.6de30e0bc5b0d9bf917da2ca63c01d55.jpg
+
+Hash ae94ca2bc2f0de38:
+  KEEP [train] shock_Screenshot-2025-02-16-231553_png_png.rf.eac8e176f78f0753c6443344af319c9e.jpg
+  DROP [val] shock_Screenshot-2025-02-16-231553_png_png.rf.4fcc467efc5f8e0f76f186384b491282.jpg
+
+Hash af2abac12e5ee043:
+  KEEP [val] scrap_Screenshot-2025-02-17-045112_png_png.rf.760d53ebde5de9eb6e8dc8e1dbd63979.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-045112_png_png.rf.0cb68b23356fdde433e9f4a51b8f02b4.jpg
+
+Hash b0052fab960cf657:
+  KEEP [train] scrap_Screenshot-2025-02-17-042349_png_png.rf.d3a1e8c64244d748ce81375da1d7fd22.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042349_png_png.rf.b15496d7c4ac6ea921b9f274cc1ae588.jpg
+
+Hash b244ed395a5a5aca:
+  KEEP [val] shock_Screenshot-2025-02-16-235955_png_png.rf.aea197ac9641b40b4d7705fb703f466e.jpg
+  DROP [train] shock_Screenshot-2025-02-16-235955_png_png.rf.7f6ab4cfbae49e75eb8c79d0787c4873.jpg
+
+Hash b2482a7575e3ef08:
+  KEEP [train] scrap_Screenshot-2025-02-17-045225_png_png.rf.b69cbc145f5a063a4060b5f9a6221e3d.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-045225_png_png.rf.38c91c1a7be949f3e4b19345824c3055.jpg
+
+Hash b43cc30e4d9d5327:
+  KEEP [train] scrap_Screenshot-2025-02-17-043239_png_png.rf.7c47170317ef392a225cc9f5b9fd28ed.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043239_png_png.rf.486102fbb8cbc8a2be282371ec6a8044.jpg
+
+Hash b54241b69c793e69:
+  KEEP [val] scrap_Screenshot-2025-02-17-050717_png_png.rf.88525a7797b2c4c10e1492586ad417aa.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050717_png_png.rf.6687dd7dd2b52821f70ff50f1d76796d.jpg
+
+Hash b671bc13117e815d:
+  KEEP [val] scrap_Screenshot-2025-02-17-042836_png_png.rf.b6c7a23194a136e4eb4ebf3e5c380421.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042836_png_png.rf.6b3d2b5877d9c9c2ef0649e1da6f0d32.jpg
+
+Hash b750251c9ec371e5:
+  KEEP [test] shock_Screenshot-2025-02-16-234848_png_png.rf.f8c3ed9920b6b3cc1a109102d01b9a4b.jpg
+  DROP [train] shock_Screenshot-2025-02-16-234848_png_png.rf.df8d93751fe2ff5a42a2adc359237654.jpg
+
+Hash b86f6989f0038cf9:
+  KEEP [test] shock_Screenshot-2025-02-16-224334_png_png.rf.f7a5afc5f65cd97d8fd151aa6fb5f8b2.jpg
+  DROP [train] shock_Screenshot-2025-02-16-224334_png_png.rf.7edf4d9f0db30d35d8d3ed2b015d3ef5.jpg
+
+Hash ba4adcd4eb4d2544:
+  KEEP [train] shock_Screenshot-2025-02-16-223030_png_png.rf.89794baef43b03840aa5cf161d98e20c.jpg
+  DROP [val] shock_Screenshot-2025-02-16-223030_png_png.rf.731445bec0082633cb03dbb518ab166c.jpg
+
+Hash bd4cb27ab0031cf5:
+  KEEP [val] scrap_Screenshot-2025-02-17-045140_png_png.rf.c687367e95c8ecc6e4345e27d063b8cd.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-045140_png_png.rf.2efd982dd6f8fe183919a38b46b42a31.jpg
+
+Hash bedd53631da49242:
+  KEEP [train] scrap_Screenshot-2025-02-17-045201_png_png.rf.ada1c006556a303e3e7b426a0d2cdadd.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-045201_png_png.rf.41ac3d8caf1cecb2838b7df20b336de1.jpg
+
+Hash c03a6b9f623f39c0:
+  KEEP [train] scrap_Screenshot-2025-02-17-000005_png_png.rf.bd4e315ce1bb8bf5de5f27a0af393fec.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-000005_png_png.rf.217d77a028adce4380f6f7e2a7022903.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-000005_png_png.rf.b720c80e500ea0e31ffa5bf9eebebb4e.jpg
+
+Hash c12d957b6699462e:
+  KEEP [train] scrap_Screenshot-2025-02-17-045320_png_png.rf.40794cfb2135f0a121e0edbf9bb42526.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-045320_png_png.rf.3714e139ee85bf68135e141753575407.jpg
+
+Hash c2efcc49619d1745:
+  KEEP [train] scrap_Screenshot-2025-02-17-042532_png_png.rf.2262266e706fe7602f4330ad30313095.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042532_png_png.rf.1070fac2849f1f5c9cd9d3910bd20e90.jpg
+
+Hash c599126f935a25da:
+  KEEP [train] scrap_Screenshot-2025-02-17-044246_png_png.rf.dcdc926c257ba6c0656cb24e4cad7f8a.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-044246_png_png.rf.393e7b20c77eda667d4f70534d3bfab8.jpg
+
+Hash c70469b32c1f5a67:
+  KEEP [test] shock_Screenshot-2025-02-16-235040_png_png.rf.d89df92288a823332a1d4760b9c431c0.jpg
+  DROP [train] shock_Screenshot-2025-02-16-235040_png_png.rf.54b9325ef921bb3579c770d7dc50699e.jpg
+
+Hash c83ed9244a95e6bc:
+  KEEP [train] shock_Screenshot-2025-02-16-231726_png_png.rf.c8aff09b9b94e390c536d813d99ae0ca.jpg
+  DROP [train] shock_Screenshot-2025-02-16-231726_png_png.rf.0b81b89575352b8f02ea406d6b0cd25b.jpg
+
+Hash ca3776c02fc139c9:
+  KEEP [train] scrap_Screenshot-2025-02-17-000027_png_png.rf.c2f71714b2c8bcc97f18a281efa493f5.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-000027_png_png.rf.24e0d1355d0f14c54cc5852f3a943709.jpg
+
+Hash ccbe06262d71b9a9:
+  KEEP [val] scrap_Screenshot-2025-02-17-050333_png_png.rf.f75c23aa1b3be0e382802a7f1cd1651d.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-050333_png_png.rf.dbf43e4064edba8ebae07621b9313eeb.jpg
+
+Hash ce0058cf9d879bc6:
+  KEEP [train] scrap_Screenshot-2025-02-17-050237_png_png.rf.216cc1b9c7bb215e9c0042a4d777f964.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050237_png_png.rf.0bffff96e9d945b31bfdef03b0f76a3c.jpg
+
+Hash d1272a0b5b7971d2:
+  KEEP [val] scrap_Screenshot-2025-02-16-235904_png_png.rf.62c17338288322a5e42ecf71e51458b4.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235904_png_png.rf.48128c2a352056249974c6efe0eb336c.jpg
+
+Hash d133b5a5ec443e4a:
+  KEEP [train] scrap_Screenshot-2025-02-17-042748_png_png.rf.9905f2cad17edcc1e95c48e25f323ef2.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042748_png_png.rf.8e731867b91885d5b28824156e7ce22e.jpg
+
+Hash d29234a56e98f89d:
+  KEEP [train] scrap_Screenshot-2025-02-17-041621_png_png.rf.842980afba2298ea4ad67da283b93a0c.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-041621_png_png.rf.2935fef67cddbd0ba5e4d7b0a2b5a9be.jpg
+
+Hash d46b8533cc90e76c:
+  KEEP [train] scrap_Screenshot-2025-02-16-235353_png_png.rf.8656ae4f84185c117f5e84853b3548bc.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235353_png_png.rf.152118fd7fb7477b063b4419759c613f.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-235353_png_png.rf.474bc9affaac3e3d3a5a60d9000d909a.jpg
+
+Hash d50e86d56f0d9ca4:
+  KEEP [train] scrap_Screenshot-2025-02-17-042816_png_png.rf.a29bfab384fdfdb3ee450763e52a0e9a.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042816_png_png.rf.328b51e13a779bf38888b790f703eea4.jpg
+
+Hash d57e0a6039b5a5d1:
+  KEEP [train] scrap_Screenshot-2025-02-16-225059_png_png.rf.780209360b2af1d0180710be3f6b7760.jpg
+  DROP [train] scrap_Screenshot-2025-02-16-225059_png_png.rf.0124d2c3612f29c7126337206d2e7320.jpg
+
+Hash d595c4b5c1e76063:
+  KEEP [test] shock_Screenshot-2025-02-16-224941_png_png.rf.935ab214eb2432023c4fc92812613082.jpg
+  DROP [train] shock_Screenshot-2025-02-16-224941_png_png.rf.57b5b12b039763eb19d84c389cdf2ef3.jpg
+
+Hash d5a5066d791a99f0:
+  KEEP [train] scrap_Screenshot-2025-02-17-043007_png_png.rf.f6fad5090e1b29ba62f3cac4060f6236.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-043007_png_png.rf.594c85c7378d8d458c1a36ef0860d801.jpg
+
+Hash d7c2a5a324ab869e:
+  KEEP [val] shock_Screenshot-2025-02-16-222650_png_png.rf.da886ea64db902a47065255c35ad28cf.jpg
+  DROP [train] shock_Screenshot-2025-02-16-222650_png_png.rf.4ac6731331300e040acfeb69fb8ef06d.jpg
+
+Hash d7feab7280f05481:
+  KEEP [train] scrap_Screenshot-2025-02-17-043104_png_png.rf.f6c16c6c073cfc66dd247989d6853704.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043104_png_png.rf.1fa84b627114ecd2da51ce34aef21d3e.jpg
+
+Hash d924a79f9761c1c1:
+  KEEP [test] scrap_Screenshot-2025-02-17-050725_png_png.rf.6b8fd118353bdf32062b3c2b4b258766.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050725_png_png.rf.3d3e7c4927b21cc1736f0b55f6d864f2.jpg
+
+Hash d96227992e031cbf:
+  KEEP [train] scrap_Screenshot-2025-02-17-043931_png_png.rf.a060f0f9c7a043722c6012300192c111.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043931_png_png.rf.548a7295854246c30dfafc50b6f69fb0.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043931_png_png.rf.04acb59558c3c419de7749516dfa7ba2.jpg
+
+Hash db237cc892c44b3e:
+  KEEP [train] scrap_Screenshot-2025-02-17-043245_png_png.rf.783f4861c3b6c1cbcd4ae105964e450d.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043245_png_png.rf.3379c988104aa3140c2ed36ff59599a2.jpg
+
+Hash dca1ff0e2241d473:
+  KEEP [train] shock_Screenshot-2025-02-16-225128_png_png.rf.bf021e082c740993c95414adb0be15d9.jpg
+  DROP [test] shock_Screenshot-2025-02-16-225128_png_png.rf.9fcb26d30a7417891286b75a569a08c0.jpg
+
+Hash dd252ae057f4b5c0:
+  KEEP [train] shock_Screenshot-2025-02-16-234830_png_png.rf.641cae46a55564ddedd4470c342916d9.jpg
+  DROP [train] shock_Screenshot-2025-02-16-234830_png_png.rf.4ff48b90278f394fa1fe862d20c23731.jpg
+
+Hash debe3b20895b7211:
+  KEEP [train] shock_Screenshot-2025-02-16-234726_png_png.rf.a1e36613db90d878d9100a218a526496.jpg
+  DROP [val] shock_Screenshot-2025-02-16-234726_png_png.rf.67c075b8e7ae41ddd362d230b6b69013.jpg
+
+Hash e1fe71841e517c1a:
+  KEEP [val] shock_Screenshot-2025-02-16-221206_png_png.rf.ea6981effb5404d65e7618e57c69a37d.jpg
+  DROP [train] shock_Screenshot-2025-02-16-221206_png_png.rf.14173bb9cc6280d8cca63a75bdc167f8.jpg
+
+Hash e23a05f57f051b1c:
+  KEEP [train] scrap_Screenshot-2025-02-17-042157_png_png.rf.e0d0a8c3d53d127f3c9d9be953f9c1ac.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042157_png_png.rf.3462230857a93635ff4a0b65396cf83d.jpg
+
+Hash e4992b569cf87262:
+  KEEP [train] scrap_Screenshot-2025-02-17-050418_png_png.rf.6e98a79e3d15bab7f103f4457c27a95d.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050418_png_png.rf.66ecf70d90469abc8cf83ceb8c0ab736.jpg
+
+Hash e55347afbf822403:
+  KEEP [train] shock_Screenshot-2025-02-16-232145_png_png.rf.7149b8cf0a678ef8de6d09abf6772499.jpg
+  DROP [train] shock_Screenshot-2025-02-16-232145_png_png.rf.46ac5a710461a1377fa20503a570ff86.jpg
+
+Hash e6c7748bc4690b99:
+  KEEP [train] scrap_Screenshot-2025-02-17-050610_png_png.rf.ed7c5d8da48520f5f996a16f5c688196.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050610_png_png.rf.d35fadf4762222c8157390320f445dac.jpg
+
+Hash e6f0cd8f079d8485:
+  KEEP [test] shock_Screenshot-2025-02-16-231622_png_png.rf.f2b804b986af0ef05369301b15f8e54d.jpg
+  DROP [train] shock_Screenshot-2025-02-16-231622_png_png.rf.1c2ae7288f93f186ccc97ccde51dff69.jpg
+
+Hash e9298f1d5871a7e0:
+  KEEP [train] scrap_Screenshot-2025-02-17-042418_png_png.rf.794910c412708fe011c0870173103a0f.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042418_png_png.rf.6996f6f3ee6606153a077559ed3e46fb.jpg
+
+Hash eb72b6a3129872d8:
+  KEEP [test] shock_Screenshot-2025-02-17-000052_png_png.rf.229e19f4b0176e55a9b374c41249e229.jpg
+  DROP [train] shock_Screenshot-2025-02-17-000052_png_png.rf.025bb3e5117d0afa6afe34b8d6a7bf18.jpg
+
+Hash ec406b5fc1d94e43:
+  KEEP [val] scrap_Screenshot-2025-02-17-043306_png_png.rf.b154d5edaf681020257fa9df105abf4a.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043306_png_png.rf.138ae9a040d64f98425f4fb158191bf1.jpg
+
+Hash ed0d73f00c39497c:
+  KEEP [train] scrap_Screenshot-2025-02-17-043115_png_png.rf.97914060bb6737c5065a2af3459a67b7.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043115_png_png.rf.4caf267f538a81d1a55aedcbc8ebe0a9.jpg
+
+Hash effff138009b03a0:
+  KEEP [val] shock_Screenshot-2025-02-16-222257_png_png.rf.2e83ecac6c7cd3fffdeb9f073d91c32b.jpg
+  DROP [train] shock_Screenshot-2025-02-16-222257_png_png.rf.1a7127604e9f62c258b33935c1357424.jpg
+
+Hash f0e269652372b31d:
+  KEEP [train] scrap_Screenshot-2025-02-17-050342_png_png.rf.c4851ef83fab51b42074671ba5895231.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050342_png_png.rf.614352ce25e15b80cb25e99501933350.jpg
+
+Hash f140259e1b2f4e9d:
+  KEEP [train] scrap_Screenshot-2025-02-17-050326_png_png.rf.8f1411474dbf09cf2b8876b31579d9ac.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050326_png_png.rf.8648be0d014a4b94fe075a4a1b9470e4.jpg
+
+Hash f2ef0a407e5b84aa:
+  KEEP [train] scrap_Screenshot-2025-02-17-043726_png_png.rf.5be8e1220efe54e23eb01c4f648f7a9c.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043726_png_png.rf.5b8f84f4696a5effe24c462cfdeadd07.jpg
+  DROP [val] scrap_Screenshot-2025-02-17-043726_png_png.rf.2f239b97c4f2df9d63039109ad8c052a.jpg
+
+Hash f331b4e6e89c3258:
+  KEEP [train] scrap_Screenshot-2025-02-17-042437_png_png.rf.6bbc9012566b27b37252067f99e5579a.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-042437_png_png.rf.4b944f4180eedc59f2df08f1feccac12.jpg
+
+Hash f6932f504ea35847:
+  KEEP [train] shock_Screenshot-2025-02-16-224629_png_png.rf.bcdd7401824d8279e49607405b7e3117.jpg
+  DROP [train] shock_Screenshot-2025-02-16-224629_png_png.rf.4c0245d9f43d6ef5f00993d8676cdc25.jpg
+
+Hash f6becd2d0342da30:
+  KEEP [train] scrap_Screenshot-2025-02-17-050352_png_png.rf.e4100ea952a91f0f606b918c835f9e1f.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-050352_png_png.rf.b792d3b350caa8799ba25d3d1bcd4fe8.jpg
+  DROP [test] scrap_Screenshot-2025-02-17-050352_png_png.rf.a88e142524c56c3ed3f8b373d6d26ee3.jpg
+
+Hash f71a620a3479d8d3:
+  KEEP [train] shock_Screenshot-2025-02-16-224143_png_png.rf.41c699e6b0fc8ca12b40bd4b2d8cce41.jpg
+  DROP [train] shock_Screenshot-2025-02-16-224143_png_png.rf.09f328e51c5e49ca4b3e645d217e55b3.jpg
+
+Hash fda5039ad94d6413:
+  KEEP [train] scrap_Screenshot-2025-02-16-235927_png_png.rf.76322a77e06b96a7351ac0d3d4f1d0d9.jpg
+  DROP [val] scrap_Screenshot-2025-02-16-235927_png_png.rf.4cf7ed033b8e031628e92ddcb076c110.jpg
+
+Hash fdc1461069eccbc9:
+  KEEP [train] scrap_Screenshot-2025-02-17-043503_png_png.rf.3d852957118a4a315aefc632293ab279.jpg
+  DROP [train] scrap_Screenshot-2025-02-17-043503_png_png.rf.2b1574ad189e65889faffcf6f4f785f2.jpg
+
+
+CLEANUP RESULTS
+  Unique images kept: 393
+  Duplicate images dropped: 119
+  Malformed lines removed: 2
+  Excluded corrupted images: 0
+
+EXCLUDED IMAGES
+  (none)
+
+NEW SPLIT
+  Train: 275
+  Validation: 79
+  Test: 39
+
+CLASS DISTRIBUTION (object instances)
+  0: Cylinder: 1167
+  1: Shock_Absorber: 997
+
+POST-CLEAN VALIDATION
+  Malformed labels after cleanup: 0
+  Duplicate groups after resplit: 0
+  Cross-split leakage after resplit: 0

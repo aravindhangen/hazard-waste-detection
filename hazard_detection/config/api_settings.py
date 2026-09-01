@@ -1,0 +1,56 @@
+"""Runtime settings for the FastAPI inference service."""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+from hazard_detection.config.paths import CLEAN_DATA_YAML, PROJECT_ROOT, RUN1_WEIGHTS, YOLOV9_DIR
+
+WEIGHTS_PATH = Path(os.environ.get("HAZARD_MODEL_WEIGHTS", RUN1_WEIGHTS))
+DATA_YAML_PATH = Path(os.environ.get("HAZARD_DATA_YAML", CLEAN_DATA_YAML))
+DEVICE = os.environ.get("HAZARD_DEVICE", "0")
+IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
+CONF_THRESHOLD = float(os.environ.get("HAZARD_CONF_THRESHOLD", "0.25"))
+IOU_THRESHOLD = float(os.environ.get("HAZARD_IOU_THRESHOLD", "0.45"))
+
+API_HOST = os.environ.get("HAZARD_API_HOST", "0.0.0.0")
+API_PORT = int(os.environ.get("PORT", os.environ.get("HAZARD_API_PORT", "8000")))
+
+HAZARD_METADATA = {
+    "Cylinder": {
+        "hazard_type": "explosive",
+        "risk": "Pressurized gas (CNG/LPG/refrigerant); can explode under compression.",
+    },
+    "Shock_Absorber": {
+        "hazard_type": "toxic",
+        "risk": "Contains hydraulic oil; must be drained before recycling.",
+    },
+}
+
+MODEL_INFO = {
+    "architecture": "YOLOv9 GELAN-C-SEG",
+    "task": "instance_segmentation",
+    "classes": ["Cylinder", "Shock_Absorber"],
+    "image_size": IMG_SIZE,
+    "training_epochs": 100,
+    "test_map50_mask": 0.732,
+    "test_recall_mask": 0.722,
+    "approx_fps_rtx4050": 22.9,
+}
+
+# Re-export for inference module compatibility.
+__all__ = [
+    "API_HOST",
+    "API_PORT",
+    "CONF_THRESHOLD",
+    "DATA_YAML_PATH",
+    "DEVICE",
+    "HAZARD_METADATA",
+    "IMG_SIZE",
+    "IOU_THRESHOLD",
+    "MODEL_INFO",
+    "PROJECT_ROOT",
+    "WEIGHTS_PATH",
+    "YOLOV9_DIR",
+]
