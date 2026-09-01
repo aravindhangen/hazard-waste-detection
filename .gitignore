@@ -44,8 +44,8 @@ yolov9/.git/
 # YOLOv9 training artifacts (production weight tracked via LFS)
 yolov9/runs/train-seg/**/*
 !yolov9/runs/train-seg/hazard_waste_seg/
-!yolov9/runs/train-seg/hazard_waste_seg/**
-yolov9/runs/train-seg/hazard_waste_seg/weights/last.pt
+!yolov9/runs/train-seg/hazard_waste_seg/weights/
+!yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
 yolov9/runs/val-seg/
 yolov9/runs/predict-seg/
 

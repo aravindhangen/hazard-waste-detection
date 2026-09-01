@@ -4,12 +4,12 @@ cd /d "%~dp0"
 
 echo === Hazard Waste Detection - GitHub Push ===
 echo Remote: https://github.com/aravindhangen/hazard-waste-detection.git
+echo Branch: main (3 commits, includes YOLOv9 best.pt via Git LFS)
 echo.
-echo BEFORE running this script:
-echo   1. Open https://github.com/new
-echo   2. Repository name: hazard-waste-detection
-echo   3. Leave README / gitignore / license UNCHECKED
-echo   4. Click Create repository
+echo When Git asks for credentials:
+echo   Username: your GitHub username
+echo   Password: Personal Access Token (NOT your GitHub password)
+echo   Create token: https://github.com/settings/tokens  (repo scope)
 echo.
 pause
 
@@ -17,7 +17,7 @@ git branch -M main
 git remote set-url origin https://github.com/aravindhangen/hazard-waste-detection.git
 
 echo.
-echo Pushing to GitHub (Git LFS may upload best.pt - this can take several minutes)...
+echo Pushing to GitHub (Git LFS uploads best.pt ~212 MB - may take 5-15 minutes)...
 git push -u origin main
 
 if errorlevel 1 (
