@@ -646,6 +646,11 @@ function renderCompareResults(data) {
   els.compareGrid.classList.add("hidden");
 }
 
+function renderSafeCompareIds(modelIds) {
+  if (!IS_RENDER_HOST) return modelIds;
+  return modelIds.filter((id) => id !== "yolov9");
+}
+
 async function predictImage(file) {
   if (isAnalyzing) return;
   if (!apiOnline) {
@@ -656,17 +661,11 @@ async function predictImage(file) {
     );
     return;
   }
-  if (IS_RENDER_HOST && analysisMode === "compare") {
-    alert(
-      "3-model compare is very slow on cloud CPU and may time out. Use Single Model mode for reliable results."
-    );
-    return;
-  }
 
   const modelId = analysisMode === "compare" ? null : els.modelSelect.value;
   if (IS_RENDER_HOST && modelId === "yolov9") {
     alert(
-      "YOLOv9 needs more memory than this cloud instance provides. Select YOLOv8s (default on Render) or run locally with GPU."
+      "YOLOv9 needs more memory than this cloud instance provides. Select YOLOv8s or YOLO11s on Render."
     );
     return;
   }
@@ -678,16 +677,35 @@ async function predictImage(file) {
 
   try {
     if (analysisMode === "compare") {
-      const modelIds = selectedCompareIds();
+      let modelIds = selectedCompareIds();
       if (!modelIds.length) {
         alert("Select at least one model for comparison.");
         return;
       }
+      if (IS_RENDER_HOST) {
+        const withoutYolov9 = renderSafeCompareIds(modelIds);
+        if (!withoutYolov9.length) {
+          alert("On Render cloud CPU, compare YOLO11s and YOLOv8s only. YOLOv9 is not supported.");
+          return;
+        }
+        if (withoutYolov9.length !== modelIds.length) {
+          modelIds = withoutYolov9;
+        }
+        const proceed = window.confirm(
+          "Cloud compare runs YOLO11s + YOLOv8s only (YOLOv9 excluded). This may take 2–4 minutes. Continue?"
+        );
+        if (!proceed) return;
+      }
       const compareIds =
-        modelIds.length === MODEL_DISPLAY_ORDER.length
+        !IS_RENDER_HOST && modelIds.length === MODEL_DISPLAY_ORDER.length
           ? MODEL_DISPLAY_ORDER.join(",")
           : modelIds.join(",");
-      setLoading(true, "Comparing all three models on the same image…");
+      setLoading(
+        true,
+        IS_RENDER_HOST
+          ? "Comparing YOLO11s and YOLOv8s on cloud CPU (2–4 min)…"
+          : "Comparing all three models on the same image…"
+      );
       setCompareInputPreview(file);
       const res = await fetch(
         `${API_BASE}/predict/compare?include_annotated_image=true&conf_threshold=${conf}&model_ids=${compareIds}`,
