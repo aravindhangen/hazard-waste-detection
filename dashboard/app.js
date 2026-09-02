@@ -48,10 +48,10 @@ const els = {
   resultsTitle: document.getElementById("results-title"),
 };
 
-const MODEL_DISPLAY_ORDER = ["yolov9", "yolo11s", "yolov8s"];
+const MODEL_DISPLAY_ORDER = ["yolov5", "yolo11s", "yolov8s"];
 
 const MODEL_META = {
-  yolov9: { run: "Run 1", label: "Production" },
+  yolov5: { run: "Run 4", label: "Production" },
   yolo11s: { run: "Run 2", label: "Tested" },
   yolov8s: { run: "Run 3", label: "Tested" },
 };
@@ -74,7 +74,7 @@ let compareInputUrl = null;
 let lastCompareModels = [];
 let modelReady = false;
 let apiOnline = false;
-let defaultModelId = "yolov9";
+let defaultModelId = "yolov5";
 const IS_RENDER_HOST = window.location.hostname.includes("onrender.com");
 
 function setLoading(active, message = "Running inference…") {
@@ -134,7 +134,7 @@ function modelTagsHtml(model, speedster = null) {
 
 function statusLabel(model) {
   const id = modelId(model);
-  if (id === "yolov9" || model.role === "production") return "Production";
+  if (id === "yolov5" || model.role === "production") return "Production";
   if (hasBenchmark(model)) {
     if (id === "yolov8s") return "Tested · Run 3";
     if (id === "yolo11s") return "Tested · Run 2";
@@ -213,7 +213,7 @@ function renderSelectionBanner() {
     return;
   }
 
-  const winner = tested.find((model) => modelId(model) === "yolov9") || tested[0];
+  const winner = tested.find((model) => modelId(model) === "yolov5") || tested[0];
   const speedster = fastestModel(tested);
   const bench = effectiveBenchmark(winner);
 
@@ -268,7 +268,7 @@ function renderModelControls() {
     label.appendChild(text);
     if (model.id === "yolov8s" && hasBenchmark(model)) {
       const note = document.createElement("small");
-      note.textContent = "Fastest inference (~69 FPS) · lower mAP than YOLOv9";
+      note.textContent = "Fastest inference (~69 FPS) · compare with YOLOv5s / YOLO11s";
       label.appendChild(note);
     }
     els.modelCheckboxes.appendChild(label);
@@ -284,7 +284,7 @@ function renderBenchmarkTable() {
     const bench = effectiveBenchmark(model);
     const testedModel = hasBenchmark(model);
     const row = document.createElement("tr");
-    if (model.id === "yolov9") row.className = "winner-row";
+    if (model.id === "yolov5") row.className = "winner-row";
     else if (speedster && modelId(speedster) === modelId(model)) row.className = "speed-row";
     const fpsCell =
       testedModel && speedster && modelId(speedster) === modelId(model)
@@ -311,7 +311,7 @@ async function loadModelCatalog() {
     const res = await fetch(`${API_BASE}/models`);
     const data = await res.json();
     if (!res.ok) throw new Error("Failed to load model catalog");
-    defaultModelId = data.default_model_id || "yolov9";
+    defaultModelId = data.default_model_id || "yolov5";
     modelCatalog = (data.models || []).map(normalizeModel);
     els.benchmarkRecommendation.textContent = data.recommendation || "";
     renderModelControls();
@@ -383,7 +383,7 @@ function setAnalysisMode(mode) {
   if (mode === "compare" && !lastCompareModels.some((model) => model.annotated_image_base64)) {
     els.compareThreeWrap.classList.remove("hidden");
     els.compareThreeGrid.innerHTML =
-      `<div class="placeholder compare-placeholder"><p>Upload an image and click <strong>Compare Models</strong> to see YOLOv9, YOLO11s, and YOLOv8s side by side.</p></div>`;
+      `<div class="placeholder compare-placeholder"><p>Upload an image and click <strong>Compare Models</strong> to see YOLOv5s, YOLO11s, and YOLOv8s side by side.</p></div>`;
   }
 }
 
@@ -510,7 +510,7 @@ function renderThreeModelComparison(models) {
     .map((model) => {
       const id = modelId(model);
       const panelClass =
-        id === "yolov9" ? "winner" : id === "yolov8s" ? "speed" : id === "yolo11s" ? "challenger" : "";
+        id === "yolov5" ? "winner" : id === "yolov8s" ? "speed" : id === "yolo11s" ? "challenger" : "";
       const run = modelRunLabel(model);
       const status = model.error
         ? "Inference error"
@@ -646,11 +646,6 @@ function renderCompareResults(data) {
   els.compareGrid.classList.add("hidden");
 }
 
-function renderSafeCompareIds(modelIds) {
-  if (!IS_RENDER_HOST) return modelIds;
-  return modelIds.filter((id) => id !== "yolov9");
-}
-
 async function predictImage(file) {
   if (isAnalyzing) return;
   if (!apiOnline) {
@@ -661,13 +656,11 @@ async function predictImage(file) {
     );
     return;
   }
-
-  const modelId = analysisMode === "compare" ? null : els.modelSelect.value;
-  if (IS_RENDER_HOST && modelId === "yolov9") {
-    alert(
-      "YOLOv9 needs more memory than this cloud instance provides. Select YOLOv8s or YOLO11s on Render."
+  if (IS_RENDER_HOST && analysisMode === "compare") {
+    const proceed = window.confirm(
+      "Cloud compare runs all three models sequentially and may take 3–5 minutes. Continue?"
     );
-    return;
+    if (!proceed) return;
   }
   isAnalyzing = true;
 
@@ -682,28 +675,14 @@ async function predictImage(file) {
         alert("Select at least one model for comparison.");
         return;
       }
-      if (IS_RENDER_HOST) {
-        const withoutYolov9 = renderSafeCompareIds(modelIds);
-        if (!withoutYolov9.length) {
-          alert("On Render cloud CPU, compare YOLO11s and YOLOv8s only. YOLOv9 is not supported.");
-          return;
-        }
-        if (withoutYolov9.length !== modelIds.length) {
-          modelIds = withoutYolov9;
-        }
-        const proceed = window.confirm(
-          "Cloud compare runs YOLO11s + YOLOv8s only (YOLOv9 excluded). This may take 2–4 minutes. Continue?"
-        );
-        if (!proceed) return;
-      }
       const compareIds =
-        !IS_RENDER_HOST && modelIds.length === MODEL_DISPLAY_ORDER.length
+        modelIds.length === MODEL_DISPLAY_ORDER.length
           ? MODEL_DISPLAY_ORDER.join(",")
           : modelIds.join(",");
       setLoading(
         true,
         IS_RENDER_HOST
-          ? "Comparing YOLO11s and YOLOv8s on cloud CPU (2–4 min)…"
+          ? "Comparing YOLOv5s, YOLO11s, and YOLOv8s on cloud CPU (3–5 min)…"
           : "Comparing all three models on the same image…"
       );
       setCompareInputPreview(file);

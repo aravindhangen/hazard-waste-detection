@@ -52,9 +52,12 @@ from hazard_detection.config.paths import (
     RUN3_PRETRAINED,
     RUN3_REPORT_JSON,
     RUN3_WEIGHTS,
+    RUN4_DIR,
+    RUN4_PRETRAINED,
+    RUN4_REPORT_JSON,
+    RUN4_WEIGHTS,
     SCRIPTS_DIR,
     VISUAL_QA_DIR,
-    YOLOV9_DIR,
 )
 
 __all__ = [
@@ -99,6 +102,10 @@ __all__ = [
     "RUN3_PRETRAINED",
     "RUN3_REPORT_JSON",
     "RUN3_WEIGHTS",
+    "RUN4_DIR",
+    "RUN4_PRETRAINED",
+    "RUN4_REPORT_JSON",
+    "RUN4_WEIGHTS",
     "SCRIPTS_DIR",
     "SOURCE_DATASETS",
     "SPLITS",
@@ -107,5 +114,4 @@ __all__ = [
     "VAL_RATIO",
     "VISUAL_QA_DIR",
     "WEIGHTS_PATH",
-    "YOLOV9_DIR",
 ]

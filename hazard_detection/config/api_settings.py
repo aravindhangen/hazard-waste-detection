@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from hazard_detection.config.paths import CLEAN_DATA_YAML, PROJECT_ROOT, RUN1_WEIGHTS, YOLOV9_DIR
+from hazard_detection.config.paths import CLEAN_DATA_YAML, PROJECT_ROOT, RUN4_WEIGHTS
 
 
 def _resolve_device() -> str:
@@ -33,7 +33,7 @@ def _resolve_device() -> str:
     return requested
 
 
-WEIGHTS_PATH = Path(os.environ.get("HAZARD_MODEL_WEIGHTS", RUN1_WEIGHTS))
+WEIGHTS_PATH = Path(os.environ.get("HAZARD_MODEL_WEIGHTS", RUN4_WEIGHTS))
 DATA_YAML_PATH = Path(os.environ.get("HAZARD_DATA_YAML", CLEAN_DATA_YAML))
 DEVICE = _resolve_device()
 IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
@@ -58,14 +58,11 @@ HAZARD_METADATA = {
 }
 
 MODEL_INFO = {
-    "architecture": "YOLOv9 GELAN-C-SEG",
+    "architecture": "YOLOv5s-Seg",
     "task": "instance_segmentation",
     "classes": ["Cylinder", "Shock_Absorber"],
     "image_size": IMG_SIZE,
     "training_epochs": 100,
-    "test_map50_mask": 0.732,
-    "test_recall_mask": 0.722,
-    "approx_fps_rtx4050": 22.9,
 }
 
 # Re-export for inference module compatibility.
@@ -84,5 +81,4 @@ __all__ = [
     "MODEL_INFO",
     "PROJECT_ROOT",
     "WEIGHTS_PATH",
-    "YOLOV9_DIR",
 ]

@@ -1,4 +1,4 @@
-"""Compare Run 1 (YOLOv9), Run 2 (YOLO11s), and Run 3 (YOLOv8s) on held-out test metrics."""
+"""Compare Run 4 (YOLOv5s), Run 2 (YOLO11s), and Run 3 (YOLOv8s) on held-out test metrics."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 
-from hazard_detection.config import COMPARISON_DIR, RUN1_REPORT_JSON, RUN2_REPORT_JSON, RUN3_REPORT_JSON
+from hazard_detection.config import COMPARISON_DIR, RUN2_REPORT_JSON, RUN3_REPORT_JSON, RUN4_REPORT_JSON
 
 OUTPUT_DIR = COMPARISON_DIR
 OUTPUT_TXT = OUTPUT_DIR / "all_runs_comparison.txt"
@@ -66,15 +66,15 @@ def fmt(value: float | None) -> str:
 def main() -> None:
     runs: list[RunSnapshot] = []
 
-    run1 = _load_report(
-        RUN1_REPORT_JSON,
-        "run1",
-        "Run 1 (production)",
-        "YOLOv9 GELAN-C-SEG",
-        "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt",
+    run4 = _load_report(
+        RUN4_REPORT_JSON,
+        "run4",
+        "Run 4 (YOLOv5s)",
+        "YOLOv5s-Seg",
+        "runs/yolov5s_run4/weights/best_yolov5s.pt",
     )
-    if run1:
-        runs.append(run1)
+    if run4:
+        runs.append(run4)
 
     run2 = _load_report(
         RUN2_REPORT_JSON,
@@ -96,8 +96,11 @@ def main() -> None:
     if run3:
         runs.append(run3)
 
-    if not run1:
-        raise FileNotFoundError(f"Run 1 report missing: {RUN1_REPORT_JSON}")
+    if not runs:
+        raise FileNotFoundError(
+            "No run reports found. Train at least one model, e.g. "
+            "python scripts/training/13_train_yolov5_run4.py --device 0"
+        )
 
     best_cylinder = max(runs, key=lambda r: r.cylinder_recall)
     best_map50 = max(runs, key=lambda r: r.map50)
@@ -106,6 +109,7 @@ def main() -> None:
         "Hazard Waste Detection — All Runs Comparison",
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
+        "Models: YOLOv5s (Run 4), YOLO11s (Run 2), YOLOv8s (Run 3)",
         "Priority: Cylinder Recall > mAP@50 > mAP@50:95 > FPS",
         f"Meaningful delta threshold: {MEANINGFUL_DELTA:.2f} on 39-image test set",
         "",
@@ -119,12 +123,12 @@ def main() -> None:
             f"{fmt(run.recall):>8} {fmt(run.fps):>8}"
         )
 
-    if not run3:
+    if not run4:
         lines.extend(
             [
                 "",
-                "Run 3 (YOLOv8s) not available yet.",
-                "Train with: python 11_train_yolov8_run3.py --device 0",
+                "Run 4 (YOLOv5s) not available yet.",
+                "Train with: python scripts/training/13_train_yolov5_run4.py --device 0",
             ]
         )
 
@@ -136,11 +140,11 @@ def main() -> None:
             f"  Best mAP@50:          {best_map50.model} ({best_map50.map50:.3f})",
             "",
             "Production recommendation",
-            "  Keep YOLOv9 as production unless a challenger clearly beats it on Cylinder recall",
-            "  AND overall mAP@50 without sacrificing safety-aligned metrics.",
+            "  YOLOv5s (Run 4) is the default production model for cloud-friendly deployment.",
+            "  Compare against YOLO11s and YOLOv8s using the same frozen test split.",
             "",
-            "Official production weights (unchanged):",
-            "  yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt",
+            "Production weights:",
+            "  runs/yolov5s_run4/weights/best_yolov5s.pt",
         ]
     )
 
@@ -150,6 +154,7 @@ def main() -> None:
         "runs": [run.__dict__ for run in runs],
         "best_cylinder_recall": best_cylinder.__dict__,
         "best_map50": best_map50.__dict__,
+        "run4_available": run4 is not None,
         "run3_available": run3 is not None,
     }
     OUTPUT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")

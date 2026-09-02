@@ -48,6 +48,13 @@ RUN1_REPORT_JSON = EVALUATION_REPORTS_DIR / "final_evaluation_report.json"
 RUN1_REPORT_TXT = EVALUATION_REPORTS_DIR / "final_evaluation_report.txt"
 
 # ---------------------------------------------------------------------------
+# YOLOv5 (Run 4 — production / academic baseline)
+# ---------------------------------------------------------------------------
+RUN4_DIR = PROJECT_ROOT / "runs" / "yolov5s_run4"
+RUN4_WEIGHTS = RUN4_DIR / "weights" / "best_yolov5s.pt"
+RUN4_REPORT_JSON = RUN4_DIR / "evaluation" / "run4_evaluation_report.json"
+
+# ---------------------------------------------------------------------------
 # YOLO11 (Run 2 — experimental comparison)
 # ---------------------------------------------------------------------------
 RUN2_DIR = PROJECT_ROOT / "runs" / "yolo11s_run2"
@@ -78,6 +85,7 @@ def _pretrained_path(filename: str) -> Path:
 
 RUN2_PRETRAINED = _pretrained_path("yolo11s-seg.pt")
 RUN3_PRETRAINED = _pretrained_path("yolov8s-seg.pt")
+RUN4_PRETRAINED = _pretrained_path("yolov5s-seg.pt")
 
 # ---------------------------------------------------------------------------
 # Pipeline / QA reports

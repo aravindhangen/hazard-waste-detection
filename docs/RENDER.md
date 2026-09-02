@@ -14,13 +14,11 @@ Host the FastAPI app + dashboard on [Render](https://render.com) using the CPU D
 ### Required weight files (committed to Git)
 
 ```
-yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+runs/yolov5s_run4/weights/best_yolov5s.pt   # after Run 4 training
 runs/yolo11s_run2/weights/best_yolo11s.pt
 runs/yolov8s_run3/weights/best_yolov8s.pt
 runs/comparison/all_runs_comparison.json
 ```
-
-If weights are too large for GitHub (>100 MB per file), use [Git LFS](https://git-lfs.github.com/) — a `.gitattributes` file is included for `best.pt` (211 MB).
 
 ```bash
 git lfs install

@@ -2,8 +2,10 @@
 
 Instance segmentation for **Cylinders** and **Shock Absorbers** in scrap-yard imagery.
 
-**Production model:** YOLOv9 GELAN-C-SEG  
-`yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt`
+**Production model:** YOLOv5s-Seg (Run 4 — train first)  
+`runs/yolov5s_run4/weights/best_yolov5s.pt`
+
+**Comparison models:** YOLO11s (Run 2), YOLOv8s (Run 3)
 
 ## Quick start
 
@@ -81,17 +83,17 @@ Hazard_Waste_Detection/
 │   └── data/               # Label utilities
 ├── scripts/
 │   ├── pipeline/           # Dataset prep (00–07)
-│   ├── training/           # Training & comparison (08–12)
+│   ├── training/           # Training & comparison (08–13)
 │   ├── verify_endpoints.py # API smoke tests
 │   └── _common.py          # Shared script bootstrap
 ├── hazard_dataset_clean/   # Frozen dataset (393 images)
 ├── hazard_dataset/         # Raw merged dataset (512 images)
-├── yolov9/                 # YOLOv9 vendor + Run 1 production weights
 ├── runs/
+│   ├── yolov5s_run4/       # Run 4 — YOLOv5s (production)
 │   ├── yolo11s_run2/       # Run 2 — YOLO11s
 │   ├── yolov8s_run3/       # Run 3 — YOLOv8s
 │   └── comparison/         # 3-model comparison reports
-├── evaluation_reports/     # Run 1 official evaluation
+├── evaluation_reports/     # Legacy Run 1 evaluation (archived)
 ├── pretrained/             # Ultralytics base checkpoints
 ├── reports/                # Pipeline logs (dedup report)
 ├── notebooks/              # Jupyter notebooks
@@ -123,7 +125,7 @@ Run from the project root with `PYTHONPATH` set (launchers do this automatically
 |--------|---------|
 | `python scripts/pipeline/00_build_dataset.py` | Merge Roboflow exports |
 | `python scripts/pipeline/05_deduplicate_and_resplit.py` | Dedup → `hazard_dataset_clean/` |
-| `python scripts/training/08_train_yolov9.py` | Run 1 — YOLOv9 |
+| `python scripts/training/13_train_yolov5_run4.py` | Run 4 — YOLOv5s (production) |
 | `python scripts/training/09_train_yolo11_run2.py` | Run 2 — YOLO11s |
 | `python scripts/training/11_train_yolov8_run3.py` | Run 3 — YOLOv8s |
 | `python scripts/training/12_compare_all_runs.py` | 3-model comparison |
@@ -133,7 +135,7 @@ Run from the project root with `PYTHONPATH` set (launchers do this automatically
 
 | Model | mAP@50 | Cylinder Recall | FPS | Role |
 |-------|--------|-----------------|-----|------|
-| YOLOv9 GELAN-C-SEG | 0.732 | 0.734 | 22.9 | **Production** |
+| YOLOv5s-Seg | Train Run 4 | — | — | **Production** |
 | YOLO11s-Seg | 0.643 | 0.714 | 26.6 | Tested |
 | YOLOv8s-Seg | 0.656 | 0.720 | 68.7 | Tested (fastest) |
 

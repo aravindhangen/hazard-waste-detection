@@ -9,14 +9,15 @@ from typing import Literal
 
 from hazard_detection.config.paths import (
     COMPARISON_DIR,
-    RUN1_REPORT_JSON,
-    RUN1_WEIGHTS,
     RUN2_REPORT_JSON,
     RUN2_WEIGHTS,
     RUN2_DIR,
     RUN3_REPORT_JSON,
     RUN3_WEIGHTS,
     RUN3_DIR,
+    RUN4_REPORT_JSON,
+    RUN4_WEIGHTS,
+    RUN4_DIR,
 )
 
 BackendType = Literal["yolov9", "ultralytics"]
@@ -50,25 +51,20 @@ class ModelSpec:
     badge: str | None = None
 
 
-def _load_run1_benchmark() -> BenchmarkMetrics:
-    if not RUN1_REPORT_JSON.exists():
-        return BenchmarkMetrics(
-            cylinder_recall=0.734,
-            map50=0.732,
-            map50_95=0.510,
-            recall=0.722,
-            precision=0.743,
-            f1=0.732,
-            fps=22.9,
-        )
+BackendType = Literal["ultralytics"]
+
+
+def _load_run4_benchmark() -> BenchmarkMetrics:
+    if not RUN4_REPORT_JSON.exists():
+        return BenchmarkMetrics()
     import json
 
-    data = json.loads(RUN1_REPORT_JSON.read_text(encoding="utf-8"))
+    data = json.loads(RUN4_REPORT_JSON.read_text(encoding="utf-8"))
     test = data["test"]
-    cylinder = test["per_class"]["Cylinder"]
+    cylinder = test["per_class"].get("Cylinder", {})
     infer_ms = data.get("inference_ms")
     return BenchmarkMetrics(
-        cylinder_recall=float(cylinder["recall"]),
+        cylinder_recall=float(cylinder.get("recall", 0.0)) if cylinder else None,
         map50=float(test["map50_mask"]),
         map50_95=float(test["map_mask"]),
         recall=float(test["recall_mask"]),
@@ -76,6 +72,58 @@ def _load_run1_benchmark() -> BenchmarkMetrics:
         f1=float(test["f1_mask"]),
         fps=1000.0 / float(infer_ms) if infer_ms else None,
     )
+
+
+def _load_run4_benchmark_from_comparison() -> BenchmarkMetrics:
+    comparison_path = COMPARISON_DIR / "all_runs_comparison.json"
+    if not comparison_path.exists():
+        return BenchmarkMetrics()
+    import json
+
+    data = json.loads(comparison_path.read_text(encoding="utf-8"))
+    run4 = next((run for run in data.get("runs", []) if run.get("run_id") == "run4"), None)
+    if not run4:
+        return BenchmarkMetrics()
+    return BenchmarkMetrics(
+        cylinder_recall=float(run4.get("cylinder_recall", 0.0)),
+        map50=float(run4.get("map50", 0.0)),
+        map50_95=float(run4.get("map50_95", 0.0)) if run4.get("map50_95") is not None else None,
+        recall=float(run4.get("recall", 0.0)) if run4.get("recall") is not None else None,
+        precision=float(run4.get("precision", 0.0)) if run4.get("precision") is not None else None,
+        fps=float(run4.get("fps", 0.0)) if run4.get("fps") is not None else None,
+    )
+
+
+def _yolov5_spec() -> ModelSpec:
+    weights = _resolve_run4_weights()
+    trained = weights.exists() and RUN4_REPORT_JSON.exists()
+    benchmark = _load_run4_benchmark() if trained else _load_run4_benchmark_from_comparison()
+    if benchmark.map50 is not None and weights.exists():
+        trained = True
+    return ModelSpec(
+        id="yolov5",
+        name="YOLOv5s-Seg",
+        short_name="YOLOv5s",
+        backend="ultralytics",
+        weights=weights,
+        role="production" if trained else "candidate",
+        description=(
+            "Academic baseline and production model (Run 4)."
+            if trained
+            else "Run 4 academic baseline — train with scripts/training/13_train_yolov5_run4.py"
+        ),
+        benchmark=benchmark,
+        inference_available=weights.exists(),
+        benchmark_note=None if trained else "Not yet trained — no project benchmark metrics available.",
+        badge="Production" if trained else "Run 4",
+    )
+
+
+def _resolve_run4_weights() -> Path:
+    if RUN4_WEIGHTS.exists():
+        return RUN4_WEIGHTS
+    alt = RUN4_DIR / "train" / "weights" / "best.pt"
+    return alt if alt.exists() else RUN4_WEIGHTS
 
 
 def _load_run2_benchmark() -> BenchmarkMetrics:
@@ -179,20 +227,9 @@ def _load_run3_benchmark_from_comparison() -> BenchmarkMetrics:
 
 
 def get_model_catalog() -> dict[str, ModelSpec]:
-    """Build a fresh catalog so Run 3 availability updates without a process restart."""
+    """Build a fresh catalog so Run availability updates without a process restart."""
     return {
-        "yolov9": ModelSpec(
-            id="yolov9",
-            name="YOLOv9 GELAN-C-SEG",
-            short_name="YOLOv9",
-            backend="yolov9",
-            weights=RUN1_WEIGHTS,
-            role="production",
-            description="Official production model (Run 1).",
-            benchmark=_load_run1_benchmark(),
-            inference_available=RUN1_WEIGHTS.exists(),
-            badge="Production",
-        ),
+        "yolov5": _yolov5_spec(),
         "yolo11s": ModelSpec(
             id="yolo11s",
             name="YOLO11s-Seg",
@@ -221,5 +258,5 @@ MODEL_CATALOG = get_model_catalog()
 COMPARISON_REPORT = COMPARISON_DIR / "all_runs_comparison.json"
 LEGACY_COMPARISON_REPORT = COMPARISON_DIR / "run1_vs_run2_comparison.json"
 
-DEFAULT_MODEL_ID = os.environ.get("HAZARD_DEFAULT_MODEL_ID", "yolov9")
-COMPARE_MODEL_ORDER = ("yolov9", "yolo11s", "yolov8s")
+DEFAULT_MODEL_ID = os.environ.get("HAZARD_DEFAULT_MODEL_ID", "yolov5")
+COMPARE_MODEL_ORDER = ("yolov5", "yolo11s", "yolov8s")

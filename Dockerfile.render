@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Official pytorch/pytorch image has no CPU-only 2.6.0 tag on Docker Hub.
 RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
 COPY requirements.txt requirements-train.txt requirements-api.txt requirements-run2.txt ./
@@ -25,15 +24,16 @@ COPY api/ ./api/
 COPY dashboard/ ./dashboard/
 COPY scripts/render_start.sh ./scripts/render_start.sh
 COPY hazard_dataset_clean/data.yaml ./hazard_dataset_clean/data.yaml
-COPY yolov9/ ./yolov9/
-COPY yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt \
-    ./yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
 COPY runs/yolo11s_run2/weights/best_yolo11s.pt \
     ./runs/yolo11s_run2/weights/best_yolo11s.pt
 COPY runs/yolov8s_run3/weights/best_yolov8s.pt \
     ./runs/yolov8s_run3/weights/best_yolov8s.pt
 COPY runs/comparison/all_runs_comparison.json \
     ./runs/comparison/all_runs_comparison.json
+
+# Optional: uncomment after Run 4 training
+# COPY runs/yolov5s_run4/weights/best_yolov5s.pt \
+#     ./runs/yolov5s_run4/weights/best_yolov5s.pt
 
 RUN chmod +x ./scripts/render_start.sh
 

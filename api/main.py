@@ -117,14 +117,14 @@ def _recommendation_text() -> str:
                 fastest_name = fastest.get("model", "YOLOv8s-Seg")
                 fastest_fps = fastest.get("fps", 68.7)
                 return (
-                    f"Production: YOLOv9 GELAN-C-SEG — best mAP@50 ({map50:.3f}) and Cylinder recall "
-                    f"({cyl:.3f}) on the held-out test set. {fastest_name} is fastest "
-                    f"({fastest_fps:.1f} FPS) but lower on detection metrics."
+                    f"Production: YOLOv5s-Seg — academic baseline (Run 4). "
+                    f"Best mAP@50 in comparison: {map50:.3f} ({best.get('model', 'YOLOv5s-Seg')}). "
+                    f"{fastest_name} is fastest ({fastest_fps:.1f} FPS)."
                 )
-            return data.get("recommendation", "YOLOv9 GELAN-C-SEG is the production model.")
+            return data.get("recommendation", "YOLOv5s-Seg is the production model.")
     return (
-        "YOLOv9 GELAN-C-SEG is the production model — best accuracy–safety trade-off "
-        "on the held-out test set."
+        "YOLOv5s-Seg is the production model — cloud-friendly academic baseline "
+        "compared with YOLO11s and YOLOv8s."
     )
 
 

@@ -55,5 +55,6 @@ yolov9/runs/predict-seg/
 # Ultralytics duplicate train weights (canonical copies in runs/*/weights/)
 runs/yolo11s_run2/train/
 runs/yolov8s_run3/train/
+runs/yolov5s_run4/train/
 runs/yolo11s_run2/evaluation/
 runs/yolov8s_run3/evaluation/

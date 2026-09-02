@@ -9,7 +9,7 @@ from typing import Protocol
 
 import numpy as np
 
-from api.inference import PredictionResult, SegmentationEngine
+from api.inference import PredictionResult
 from api.ultralytics_engine import UltralyticsEngine
 from hazard_detection.config.api_settings import DEVICE, MAX_LOADED_MODELS
 from hazard_detection.config.models import DEFAULT_MODEL_ID, ModelSpec, get_model_catalog, get_model_spec
@@ -105,10 +105,7 @@ class ModelManager:
             self._evict_if_needed(model_id)
 
             try:
-                if spec.backend == "yolov9":
-                    engine: InferenceEngine = SegmentationEngine(weights=spec.weights)
-                else:
-                    engine = UltralyticsEngine(weights=spec.weights)
+                engine: InferenceEngine = UltralyticsEngine(weights=spec.weights)
             except Exception as exc:
                 self._errors[model_id] = str(exc)
                 raise
