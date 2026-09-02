@@ -5,12 +5,14 @@ services:
     name: hazard-waste-detection
     runtime: docker
     dockerfilePath: ./Dockerfile.render
-    plan: pro
+    plan: standard
     region: singapore
     healthCheckPath: /health
     envVars:
       - key: HAZARD_DEVICE
         value: cpu
+      - key: HAZARD_DEFAULT_MODEL_ID
+        value: yolov8s
       - key: HAZARD_EAGER_LOAD
         value: "false"
       - key: HAZARD_BACKGROUND_WARMUP

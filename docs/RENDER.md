@@ -7,7 +7,8 @@ Host the FastAPI app + dashboard on [Render](https://render.com) using the CPU D
 | Item | Notes |
 |------|--------|
 | **GitHub repo** | Push this project (including model weights) to GitHub |
-| **Render plan** | **Pro (4 GB RAM)** recommended — YOLOv9 segmentation needs >2 GB on CPU |
+| **Render plan** | **Standard (2 GB)** with default model `yolov8s` on cloud CPU |
+| **YOLOv9 on Render** | Set `HAZARD_DEFAULT_MODEL_ID=yolov9` and upgrade to **Pro (4 GB)** |
 | **Weights in repo** | These must exist at build time (see below) |
 
 ### Required weight files (committed to Git)
@@ -30,7 +31,7 @@ git add yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
 
 Or host weights on cloud storage and download them in a custom build step.
 
-> **Standard (2 GB)** may OOM when loading YOLOv9 on CPU. Use **Pro (4 GB)** or higher.
+> **Standard (2 GB)** runs **YOLOv8s** by default on Render. **YOLOv9** needs **Pro (4 GB)** — set `HAZARD_DEFAULT_MODEL_ID=yolov9`.
 
 ---
 

@@ -335,7 +335,7 @@ async function checkHealth() {
     } else if (data.warmup_error) {
       statusLabel.textContent = `Model load failed · ${data.warmup_error}`;
     } else if (warming) {
-      statusLabel.textContent = "Loading model (30–90s on first deploy)…";
+      statusLabel.textContent = "Loading model (about 30s on cloud CPU)…";
     } else if (modelReady) {
       statusLabel.textContent = `API online · ${data.device} · ${data.models_available} models`;
     } else {

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -220,5 +221,5 @@ MODEL_CATALOG = get_model_catalog()
 COMPARISON_REPORT = COMPARISON_DIR / "all_runs_comparison.json"
 LEGACY_COMPARISON_REPORT = COMPARISON_DIR / "run1_vs_run2_comparison.json"
 
-DEFAULT_MODEL_ID = "yolov9"
+DEFAULT_MODEL_ID = os.environ.get("HAZARD_DEFAULT_MODEL_ID", "yolov9")
 COMPARE_MODEL_ORDER = ("yolov9", "yolo11s", "yolov8s")
