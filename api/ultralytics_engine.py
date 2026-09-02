@@ -16,7 +16,7 @@ from api.config import (
     IMG_SIZE,
     IOU_THRESHOLD,
 )
-from api.inference import PredictionResult, SegmentationEngine
+from api.inference import PredictionResult, decode_image, encode_image_base64
 
 
 class UltralyticsEngine:
@@ -125,8 +125,8 @@ class UltralyticsEngine:
 
     @staticmethod
     def decode_image(image_bytes: bytes) -> np.ndarray:
-        return SegmentationEngine.decode_image(image_bytes)
+        return decode_image(image_bytes)
 
     @staticmethod
     def encode_image_base64(image_bgr: np.ndarray, ext: str = ".jpg") -> str:
-        return SegmentationEngine.encode_image_base64(image_bgr, ext)
+        return encode_image_base64(image_bgr, ext)

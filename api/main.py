@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from api.inference import SegmentationEngine
+from api.inference import PredictionResult, decode_image, encode_image_base64
 from api.model_manager import ModelManager
 from api.schemas import (
     BenchmarkMetricsResponse,
@@ -86,7 +86,7 @@ def _model_summary(status) -> ModelSummaryResponse:
 def _build_predict_response(spec, result) -> PredictResponse:
     annotated_base64 = None
     if result.annotated_image is not None:
-        annotated_base64 = SegmentationEngine.encode_image_base64(result.annotated_image)
+        annotated_base64 = encode_image_base64(result.annotated_image)
 
     return PredictResponse(
         model_id=spec.id,
@@ -275,7 +275,7 @@ async def predict(
         raise HTTPException(status_code=400, detail="Empty file uploaded.")
 
     try:
-        image_bgr = SegmentationEngine.decode_image(image_bytes)
+        image_bgr = decode_image(image_bytes)
         spec, result = manager.predict(
             image_bgr,
             model_id=model_id,
@@ -330,7 +330,7 @@ async def predict_compare(
         raise HTTPException(status_code=400, detail="Empty file uploaded.")
 
     try:
-        image_bgr = SegmentationEngine.decode_image(image_bytes)
+        image_bgr = decode_image(image_bytes)
         outputs = manager.compare(
             image_bgr,
             model_ids=requested_ids,
@@ -354,7 +354,7 @@ async def predict_compare(
             image_height = result.image_height
             annotated_base64 = None
             if include_annotated_image and result.annotated_image is not None:
-                annotated_base64 = SegmentationEngine.encode_image_base64(result.annotated_image)
+                annotated_base64 = encode_image_base64(result.annotated_image)
             items.append(
                 ModelCompareItem(
                     model_id=spec.id,
