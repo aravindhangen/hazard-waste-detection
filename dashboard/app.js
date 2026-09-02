@@ -73,6 +73,7 @@ let modelCatalog = [];
 let compareInputUrl = null;
 let lastCompareModels = [];
 let modelReady = false;
+let defaultModelId = "yolov9";
 const IS_RENDER_HOST = window.location.hostname.includes("onrender.com");
 
 function setLoading(active, message = "Running inference…") {
@@ -250,7 +251,7 @@ function renderModelControls() {
     const suffix = model.inference_available ? "" : " (unavailable)";
     option.textContent = `${cleanModelName(model)}${suffix}`;
     option.disabled = !model.inference_available;
-    if (model.id === "yolov9") option.selected = true;
+    if (model.id === defaultModelId) option.selected = true;
     els.modelSelect.appendChild(option);
 
     const label = document.createElement("label");
@@ -309,6 +310,7 @@ async function loadModelCatalog() {
     const res = await fetch(`${API_BASE}/models`);
     const data = await res.json();
     if (!res.ok) throw new Error("Failed to load model catalog");
+    defaultModelId = data.default_model_id || "yolov9";
     modelCatalog = (data.models || []).map(normalizeModel);
     els.benchmarkRecommendation.textContent = data.recommendation || "";
     renderModelControls();
@@ -643,6 +645,14 @@ async function predictImage(file) {
   if (IS_RENDER_HOST && analysisMode === "compare") {
     alert(
       "3-model compare is very slow on cloud CPU and may time out. Use Single Model mode for reliable results."
+    );
+    return;
+  }
+
+  const modelId = analysisMode === "compare" ? null : els.modelSelect.value;
+  if (IS_RENDER_HOST && modelId === "yolov9") {
+    alert(
+      "YOLOv9 needs more memory than this cloud instance provides. Select YOLOv8s (default on Render) or run locally with GPU."
     );
     return;
   }
