@@ -1,5 +1,5 @@
 # Render.com — CPU web service (no GPU on standard Render plans)
-FROM pytorch/pytorch:2.6.0-cpu
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
@@ -14,8 +14,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt requirements-train.txt requirements-api.txt ./
-RUN pip install --no-cache-dir -r requirements-api.txt
+# Official pytorch/pytorch image has no CPU-only 2.6.0 tag on Docker Hub.
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+COPY requirements.txt requirements-train.txt requirements-api.txt requirements-run2.txt ./
+RUN pip install --no-cache-dir -r requirements-api.txt -r requirements-run2.txt
 
 COPY hazard_detection/ ./hazard_detection/
 COPY api/ ./api/
