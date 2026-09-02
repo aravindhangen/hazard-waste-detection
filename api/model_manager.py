@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gc
+import threading
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -37,6 +38,7 @@ class ModelManager:
     def __init__(self) -> None:
         self._engines: dict[str, InferenceEngine] = {}
         self._errors: dict[str, str] = {}
+        self._load_lock = threading.Lock()
 
     def list_models(self) -> list[ModelStatus]:
         statuses: list[ModelStatus] = []
@@ -89,27 +91,31 @@ class ModelManager:
         if model_id in self._engines:
             return self._engines[model_id]
 
-        spec = self.get_spec(model_id)
-        if not spec.inference_available:
-            raise FileNotFoundError(
-                f"Model '{spec.name}' is not available for live inference. "
-                f"{spec.benchmark_note or spec.description}"
-            )
+        with self._load_lock:
+            if model_id in self._engines:
+                return self._engines[model_id]
 
-        self._evict_if_needed(model_id)
+            spec = self.get_spec(model_id)
+            if not spec.inference_available:
+                raise FileNotFoundError(
+                    f"Model '{spec.name}' is not available for live inference. "
+                    f"{spec.benchmark_note or spec.description}"
+                )
 
-        try:
-            if spec.backend == "yolov9":
-                engine: InferenceEngine = SegmentationEngine(weights=spec.weights)
-            else:
-                engine = UltralyticsEngine(weights=spec.weights)
-        except Exception as exc:
-            self._errors[model_id] = str(exc)
-            raise
+            self._evict_if_needed(model_id)
 
-        self._engines[model_id] = engine
-        self._errors.pop(model_id, None)
-        return engine
+            try:
+                if spec.backend == "yolov9":
+                    engine: InferenceEngine = SegmentationEngine(weights=spec.weights)
+                else:
+                    engine = UltralyticsEngine(weights=spec.weights)
+            except Exception as exc:
+                self._errors[model_id] = str(exc)
+                raise
+
+            self._engines[model_id] = engine
+            self._errors.pop(model_id, None)
+            return engine
 
     def predict(
         self,

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
+import threading
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
@@ -24,6 +26,7 @@ from api.schemas import (
 )
 from hazard_detection.config import DASHBOARD_DIR
 from hazard_detection.config.api_settings import (
+    BACKGROUND_WARMUP,
     CONF_THRESHOLD,
     DATA_YAML_PATH,
     DEVICE,
@@ -43,7 +46,10 @@ from hazard_detection.config.models import (
 
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 
+logger = logging.getLogger(__name__)
 manager: ModelManager | None = None
+_warmup_done = threading.Event()
+_warmup_error: str | None = None
 
 
 def _benchmark_response(spec) -> BenchmarkMetricsResponse:
@@ -122,12 +128,50 @@ def _recommendation_text() -> str:
     )
 
 
+def _background_warmup() -> None:
+    global _warmup_error
+    try:
+        assert manager is not None
+        logger.info("Background warmup: loading %s", DEFAULT_MODEL_ID)
+        manager.get_engine(DEFAULT_MODEL_ID)
+        logger.info("Background warmup complete")
+    except Exception as exc:
+        _warmup_error = str(exc)
+        logger.exception("Background warmup failed")
+    finally:
+        _warmup_done.set()
+
+
+def _ensure_inference_ready(model_id: str = DEFAULT_MODEL_ID) -> None:
+    if manager is None:
+        raise HTTPException(status_code=503, detail="Model manager is not loaded.")
+
+    if manager.is_loaded(model_id):
+        return
+
+    if BACKGROUND_WARMUP and not _warmup_done.is_set():
+        raise HTTPException(
+            status_code=503,
+            detail="Model is still loading. Please wait 30–90 seconds and try again.",
+        )
+
+    if _warmup_error and model_id == DEFAULT_MODEL_ID:
+        raise HTTPException(status_code=503, detail=f"Model failed to load: {_warmup_error}")
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    global manager
+    global manager, _warmup_error
     manager = ModelManager()
+    _warmup_error = None
+    _warmup_done.clear()
     if EAGER_LOAD:
         manager.get_engine(DEFAULT_MODEL_ID)
+        _warmup_done.set()
+    elif BACKGROUND_WARMUP:
+        threading.Thread(target=_background_warmup, daemon=True, name="model-warmup").start()
+    else:
+        _warmup_done.set()
     yield
     manager = None
 
@@ -151,11 +195,21 @@ app.add_middleware(
 @app.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     available = sum(1 for spec in get_model_catalog().values() if spec.inference_available)
+    model_loaded = manager is not None and manager.is_loaded(DEFAULT_MODEL_ID)
+    warming = bool(manager is not None and BACKGROUND_WARMUP and not _warmup_done.is_set())
+    if _warmup_error:
+        status = "degraded"
+    elif warming:
+        status = "warming"
+    else:
+        status = "ok"
     return HealthResponse(
-        status="ok",
-        model_loaded=manager is not None and manager.is_loaded(DEFAULT_MODEL_ID),
+        status=status,
+        model_loaded=model_loaded,
         device=manager.default_device if manager else DEVICE,
         models_available=available,
+        warming=warming,
+        warmup_error=_warmup_error,
     )
 
 
@@ -214,8 +268,7 @@ async def predict(
         description="Return base64 annotated image with masks and labels.",
     ),
 ) -> PredictResponse:
-    if manager is None:
-        raise HTTPException(status_code=503, detail="Model manager is not loaded.")
+    _ensure_inference_ready(model_id)
 
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
@@ -262,8 +315,7 @@ async def predict_compare(
         description="Return base64 annotated images for each model.",
     ),
 ) -> CompareResponse:
-    if manager is None:
-        raise HTTPException(status_code=503, detail="Model manager is not loaded.")
+    _ensure_inference_ready(DEFAULT_MODEL_ID)
 
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image.")

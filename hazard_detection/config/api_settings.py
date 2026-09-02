@@ -43,6 +43,7 @@ IOU_THRESHOLD = float(os.environ.get("HAZARD_IOU_THRESHOLD", "0.45"))
 API_HOST = os.environ.get("HAZARD_API_HOST", "0.0.0.0")
 API_PORT = int(os.environ.get("PORT", os.environ.get("HAZARD_API_PORT", "8000")))
 EAGER_LOAD = os.environ.get("HAZARD_EAGER_LOAD", "true").lower() in ("1", "true", "yes")
+BACKGROUND_WARMUP = os.environ.get("HAZARD_BACKGROUND_WARMUP", "false").lower() in ("1", "true", "yes")
 MAX_LOADED_MODELS = int(os.environ.get("HAZARD_MAX_LOADED_MODELS", "3"))
 
 HAZARD_METADATA = {
@@ -71,6 +72,7 @@ MODEL_INFO = {
 __all__ = [
     "API_HOST",
     "API_PORT",
+    "BACKGROUND_WARMUP",
     "CONF_THRESHOLD",
     "DATA_YAML_PATH",
     "DEVICE",

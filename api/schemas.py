@@ -100,6 +100,8 @@ class HealthResponse(BaseModel):
     model_loaded: bool
     device: str
     models_available: int = 0
+    warming: bool = False
+    warmup_error: str | None = None
 
 
 class ModelInfoResponse(BaseModel):

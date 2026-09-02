@@ -13,6 +13,8 @@ services:
         value: cpu
       - key: HAZARD_EAGER_LOAD
         value: "false"
+      - key: HAZARD_BACKGROUND_WARMUP
+        value: "true"
       - key: HAZARD_MAX_LOADED_MODELS
         value: "1"
       - key: OMP_NUM_THREADS

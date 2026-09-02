@@ -72,6 +72,8 @@ let analysisMode = "single";
 let modelCatalog = [];
 let compareInputUrl = null;
 let lastCompareModels = [];
+let modelReady = false;
+const IS_RENDER_HOST = window.location.hostname.includes("onrender.com");
 
 function setLoading(active, message = "Running inference…") {
   els.loading.classList.toggle("hidden", !active);
@@ -322,15 +324,32 @@ async function checkHealth() {
   try {
     const res = await fetch(`${API_BASE}/health`);
     const data = await res.json();
-    const online = res.ok && data.model_loaded;
+    modelReady = Boolean(res.ok && data.model_loaded);
+    const warming = Boolean(data.warming);
+    const online = res.ok && (modelReady || warming);
     els.apiStatus.classList.toggle("online", online);
     els.apiStatus.classList.toggle("offline", !online);
-    els.apiStatus.querySelector("span:last-child").textContent = online
-      ? `API online · ${data.device} · ${data.models_available} models`
-      : "API offline";
+    const statusLabel = els.apiStatus.querySelector("span:last-child");
+    if (!res.ok) {
+      statusLabel.textContent = "API unreachable";
+    } else if (data.warmup_error) {
+      statusLabel.textContent = `Model load failed · ${data.warmup_error}`;
+    } else if (warming) {
+      statusLabel.textContent = "Loading model (30–90s on first deploy)…";
+    } else if (modelReady) {
+      statusLabel.textContent = `API online · ${data.device} · ${data.models_available} models`;
+    } else {
+      statusLabel.textContent = "API online · model not loaded";
+    }
+    els.analyzeUpload.disabled = !modelReady;
+    els.analyzeUpload.title = modelReady
+      ? ""
+      : "Wait until the production model finishes loading.";
   } catch {
+    modelReady = false;
     els.apiStatus.classList.add("offline");
     els.apiStatus.querySelector("span:last-child").textContent = "API unreachable";
+    els.analyzeUpload.disabled = true;
   }
 }
 
@@ -617,6 +636,16 @@ function renderCompareResults(data) {
 
 async function predictImage(file) {
   if (isAnalyzing) return;
+  if (!modelReady) {
+    alert("Model is still loading. Please wait until the status shows API online, then try again.");
+    return;
+  }
+  if (IS_RENDER_HOST && analysisMode === "compare") {
+    alert(
+      "3-model compare is very slow on cloud CPU and may time out. Use Single Model mode for reliable results."
+    );
+    return;
+  }
   isAnalyzing = true;
 
   const conf = parseFloat(els.confThreshold.value);
@@ -803,7 +832,7 @@ setupWebcam();
 setupLightbox();
 loadModelCatalog();
 checkHealth();
-setInterval(checkHealth, 30000);
+setInterval(checkHealth, 5000);
 
 function setupLightbox() {
   els.lightboxClose.addEventListener("click", closeLightbox);
