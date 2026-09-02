@@ -7,10 +7,35 @@ from pathlib import Path
 
 from hazard_detection.config.paths import CLEAN_DATA_YAML, PROJECT_ROOT, RUN1_WEIGHTS, YOLOV9_DIR
 
+
+def _resolve_device() -> str:
+    """Resolve inference device from env; fall back to CPU when CUDA is unavailable."""
+    requested = os.environ.get("HAZARD_DEVICE", "").strip()
+    if not requested:
+        try:
+            import torch
+
+            return "0" if torch.cuda.is_available() else "cpu"
+        except ImportError:
+            return "cpu"
+
+    if requested.lower() == "cpu":
+        return "cpu"
+
+    try:
+        import torch
+
+        if not torch.cuda.is_available():
+            return "cpu"
+    except ImportError:
+        return "cpu"
+
+    return requested
+
+
 WEIGHTS_PATH = Path(os.environ.get("HAZARD_MODEL_WEIGHTS", RUN1_WEIGHTS))
 DATA_YAML_PATH = Path(os.environ.get("HAZARD_DATA_YAML", CLEAN_DATA_YAML))
-DEVICE = os.environ.get("HAZARD_DEVICE", "0")
-IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
+DEVICE = _resolve_device()IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
 CONF_THRESHOLD = float(os.environ.get("HAZARD_CONF_THRESHOLD", "0.25"))
 IOU_THRESHOLD = float(os.environ.get("HAZARD_IOU_THRESHOLD", "0.45"))
 
