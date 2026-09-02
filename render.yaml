@@ -5,12 +5,20 @@ services:
     name: hazard-waste-detection
     runtime: docker
     dockerfilePath: ./Dockerfile.render
-    plan: standard
+    plan: pro
     region: singapore
     healthCheckPath: /health
     envVars:
       - key: HAZARD_DEVICE
         value: cpu
+      - key: HAZARD_EAGER_LOAD
+        value: "false"
+      - key: HAZARD_MAX_LOADED_MODELS
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
       - key: KMP_DUPLICATE_LIB_OK
         value: "TRUE"
       - key: PYTHONPATH

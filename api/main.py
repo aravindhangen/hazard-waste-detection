@@ -26,6 +26,8 @@ from hazard_detection.config import DASHBOARD_DIR
 from hazard_detection.config.api_settings import (
     CONF_THRESHOLD,
     DATA_YAML_PATH,
+    DEVICE,
+    EAGER_LOAD,
     IMG_SIZE,
     IOU_THRESHOLD,
     MODEL_INFO,
@@ -124,7 +126,8 @@ def _recommendation_text() -> str:
 async def lifespan(_: FastAPI):
     global manager
     manager = ModelManager()
-    manager.get_engine(DEFAULT_MODEL_ID)
+    if EAGER_LOAD:
+        manager.get_engine(DEFAULT_MODEL_ID)
     yield
     manager = None
 
@@ -150,8 +153,8 @@ def health() -> HealthResponse:
     available = sum(1 for spec in get_model_catalog().values() if spec.inference_available)
     return HealthResponse(
         status="ok",
-        model_loaded=manager is not None,
-        device=manager.default_device if manager else "unavailable",
+        model_loaded=manager is not None and manager.is_loaded(DEFAULT_MODEL_ID),
+        device=manager.default_device if manager else DEVICE,
         models_available=available,
     )
 

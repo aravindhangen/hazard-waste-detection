@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -9,6 +10,7 @@ import numpy as np
 
 from api.inference import PredictionResult, SegmentationEngine
 from api.ultralytics_engine import UltralyticsEngine
+from hazard_detection.config.api_settings import DEVICE, MAX_LOADED_MODELS
 from hazard_detection.config.models import DEFAULT_MODEL_ID, ModelSpec, get_model_catalog, get_model_spec
 
 
@@ -51,6 +53,38 @@ class ModelManager:
     def get_spec(self, model_id: str) -> ModelSpec:
         return get_model_spec(model_id)
 
+    def is_loaded(self, model_id: str) -> bool:
+        return model_id in self._engines
+
+    def _release_engine(self, model_id: str) -> None:
+        engine = self._engines.pop(model_id, None)
+        if engine is None:
+            return
+        if hasattr(engine, "model"):
+            engine.model = None
+        del engine
+        gc.collect()
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except ImportError:
+            pass
+
+    def _evict_if_needed(self, model_id: str) -> None:
+        if MAX_LOADED_MODELS <= 0:
+            return
+        while len(self._engines) >= MAX_LOADED_MODELS:
+            evicted = False
+            for cached_id in list(self._engines):
+                if cached_id != model_id:
+                    self._release_engine(cached_id)
+                    evicted = True
+                    break
+            if not evicted:
+                break
+
     def get_engine(self, model_id: str = DEFAULT_MODEL_ID) -> InferenceEngine:
         if model_id in self._engines:
             return self._engines[model_id]
@@ -61,6 +95,8 @@ class ModelManager:
                 f"Model '{spec.name}' is not available for live inference. "
                 f"{spec.benchmark_note or spec.description}"
             )
+
+        self._evict_if_needed(model_id)
 
         try:
             if spec.backend == "yolov9":
@@ -114,8 +150,6 @@ class ModelManager:
 
     @property
     def default_device(self) -> str:
-        try:
-            engine = self.get_engine(DEFAULT_MODEL_ID)
-            return str(engine.device)
-        except Exception:
-            return "unavailable"
+        if DEFAULT_MODEL_ID in self._engines:
+            return str(self._engines[DEFAULT_MODEL_ID].device)
+        return DEVICE

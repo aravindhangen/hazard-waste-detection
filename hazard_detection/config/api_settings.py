@@ -42,6 +42,8 @@ IOU_THRESHOLD = float(os.environ.get("HAZARD_IOU_THRESHOLD", "0.45"))
 
 API_HOST = os.environ.get("HAZARD_API_HOST", "0.0.0.0")
 API_PORT = int(os.environ.get("PORT", os.environ.get("HAZARD_API_PORT", "8000")))
+EAGER_LOAD = os.environ.get("HAZARD_EAGER_LOAD", "true").lower() in ("1", "true", "yes")
+MAX_LOADED_MODELS = int(os.environ.get("HAZARD_MAX_LOADED_MODELS", "3"))
 
 HAZARD_METADATA = {
     "Cylinder": {
@@ -72,9 +74,11 @@ __all__ = [
     "CONF_THRESHOLD",
     "DATA_YAML_PATH",
     "DEVICE",
+    "EAGER_LOAD",
     "HAZARD_METADATA",
     "IMG_SIZE",
     "IOU_THRESHOLD",
+    "MAX_LOADED_MODELS",
     "MODEL_INFO",
     "PROJECT_ROOT",
     "WEIGHTS_PATH",
