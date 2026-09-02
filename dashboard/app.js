@@ -73,6 +73,7 @@ let modelCatalog = [];
 let compareInputUrl = null;
 let lastCompareModels = [];
 let modelReady = false;
+let apiOnline = false;
 let defaultModelId = "yolov9";
 const IS_RENDER_HOST = window.location.hostname.includes("onrender.com");
 
@@ -326,31 +327,40 @@ async function checkHealth() {
   try {
     const res = await fetch(`${API_BASE}/health`);
     const data = await res.json();
+    apiOnline = res.ok;
     modelReady = Boolean(res.ok && data.model_loaded);
     const warming = Boolean(data.warming);
-    const online = res.ok && (modelReady || warming);
-    els.apiStatus.classList.toggle("online", online);
-    els.apiStatus.classList.toggle("offline", !online);
+    els.apiStatus.classList.toggle("online", apiOnline);
+    els.apiStatus.classList.toggle("offline", !apiOnline);
     const statusLabel = els.apiStatus.querySelector("span:last-child");
     if (!res.ok) {
       statusLabel.textContent = "API unreachable";
     } else if (data.warmup_error) {
-      statusLabel.textContent = `Model load failed · ${data.warmup_error}`;
+      statusLabel.textContent = `Warmup issue · ${data.warmup_error}`;
     } else if (warming) {
-      statusLabel.textContent = "Loading model (about 30s on cloud CPU)…";
+      statusLabel.textContent = "Warming default model…";
     } else if (modelReady) {
       statusLabel.textContent = `API online · ${data.device} · ${data.models_available} models`;
+    } else if (IS_RENDER_HOST) {
+      statusLabel.textContent = "API online · models load on first run";
     } else {
-      statusLabel.textContent = "API online · model not loaded";
+      statusLabel.textContent = "API online · models load on demand";
     }
-    els.analyzeUpload.disabled = !modelReady;
-    els.analyzeUpload.title = modelReady
+    els.analyzeUpload.disabled = !apiOnline;
+    els.analyzeUpload.title = apiOnline
       ? ""
-      : "Wait until the production model finishes loading.";
+      : IS_RENDER_HOST
+        ? "Server may take up to 60s to wake up on Render."
+        : "Wait for the API to come online.";
   } catch {
+    apiOnline = false;
     modelReady = false;
     els.apiStatus.classList.add("offline");
-    els.apiStatus.querySelector("span:last-child").textContent = "API unreachable";
+    els.apiStatus.classList.remove("online");
+    const statusLabel = els.apiStatus.querySelector("span:last-child");
+    statusLabel.textContent = IS_RENDER_HOST
+      ? "Waking up server (up to 60s)…"
+      : "API unreachable";
     els.analyzeUpload.disabled = true;
   }
 }
@@ -638,8 +648,12 @@ function renderCompareResults(data) {
 
 async function predictImage(file) {
   if (isAnalyzing) return;
-  if (!modelReady) {
-    alert("Model is still loading. Please wait until the status shows API online, then try again.");
+  if (!apiOnline) {
+    alert(
+      IS_RENDER_HOST
+        ? "Server is waking up. Wait until the status turns green, then try again."
+        : "API is offline. Wait until the status shows online, then try again."
+    );
     return;
   }
   if (IS_RENDER_HOST && analysisMode === "compare") {
@@ -686,10 +700,15 @@ async function predictImage(file) {
       const data = await res.json();
       renderCompareResults(data);
     } else {
-      const modelId = els.modelSelect.value;
-      setLoading(true, "Running inference…");
+      const selectedModelId = els.modelSelect.value;
+      setLoading(
+        true,
+        IS_RENDER_HOST && !modelReady
+          ? "Loading model on cloud CPU (first run ~30–60s)…"
+          : "Running inference…"
+      );
       const res = await fetch(
-        `${API_BASE}/predict?include_annotated_image=true&conf_threshold=${conf}&model_id=${modelId}`,
+        `${API_BASE}/predict?include_annotated_image=true&conf_threshold=${conf}&model_id=${selectedModelId}`,
         { method: "POST", body: formData }
       );
       if (!res.ok) {

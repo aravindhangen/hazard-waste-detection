@@ -149,14 +149,11 @@ def _ensure_inference_ready(model_id: str = DEFAULT_MODEL_ID) -> None:
     if manager.is_loaded(model_id):
         return
 
-    if BACKGROUND_WARMUP and not _warmup_done.is_set():
+    if BACKGROUND_WARMUP and not _warmup_done.is_set() and model_id == DEFAULT_MODEL_ID:
         raise HTTPException(
             status_code=503,
-            detail="Model is still loading. Please wait 30–90 seconds and try again.",
+            detail="Default model is still loading. Please wait 30–90 seconds and try again.",
         )
-
-    if _warmup_error and model_id == DEFAULT_MODEL_ID:
-        raise HTTPException(status_code=503, detail=f"Model failed to load: {_warmup_error}")
 
 
 @asynccontextmanager
@@ -315,14 +312,18 @@ async def predict_compare(
         description="Return base64 annotated images for each model.",
     ),
 ) -> CompareResponse:
-    _ensure_inference_ready(DEFAULT_MODEL_ID)
-
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
+    if manager is None:
+        raise HTTPException(status_code=503, detail="Model manager is not loaded.")
 
     requested_ids = [item.strip() for item in model_ids.split(",") if item.strip()]
     if not requested_ids:
         raise HTTPException(status_code=400, detail="At least one model id is required.")
+
+    for model_id in requested_ids:
+        _ensure_inference_ready(model_id)
+
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
 
     image_bytes = await file.read()
     if not image_bytes:
