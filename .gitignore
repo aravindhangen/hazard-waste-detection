@@ -22,6 +22,9 @@ htmlcov/
 .env.*
 !.env.example
 
+# Accidental empty clone folder
+hazard-waste-detection/
+
 # IDE / OS
 .idea/
 .vscode/
