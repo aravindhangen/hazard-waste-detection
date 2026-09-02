@@ -35,7 +35,8 @@ def _resolve_device() -> str:
 
 WEIGHTS_PATH = Path(os.environ.get("HAZARD_MODEL_WEIGHTS", RUN1_WEIGHTS))
 DATA_YAML_PATH = Path(os.environ.get("HAZARD_DATA_YAML", CLEAN_DATA_YAML))
-DEVICE = _resolve_device()IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
+DEVICE = _resolve_device()
+IMG_SIZE = int(os.environ.get("HAZARD_IMG_SIZE", "640"))
 CONF_THRESHOLD = float(os.environ.get("HAZARD_CONF_THRESHOLD", "0.25"))
 IOU_THRESHOLD = float(os.environ.get("HAZARD_IOU_THRESHOLD", "0.45"))
 
