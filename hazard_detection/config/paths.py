@@ -50,6 +50,7 @@ RUN1_REPORT_TXT = EVALUATION_REPORTS_DIR / "final_evaluation_report.txt"
 # ---------------------------------------------------------------------------
 # YOLOv5 (Run 4 — production / academic baseline)
 # ---------------------------------------------------------------------------
+YOLOV5_DIR = PROJECT_ROOT / "yolov5"
 RUN4_DIR = PROJECT_ROOT / "runs" / "yolov5s_run4"
 RUN4_WEIGHTS = RUN4_DIR / "weights" / "best_yolov5s.pt"
 RUN4_REPORT_JSON = RUN4_DIR / "evaluation" / "run4_evaluation_report.json"

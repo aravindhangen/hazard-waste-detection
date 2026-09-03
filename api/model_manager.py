@@ -11,6 +11,7 @@ import numpy as np
 
 from api.inference import PredictionResult
 from api.ultralytics_engine import UltralyticsEngine
+from api.yolov5_engine import Yolov5Engine
 from hazard_detection.config.api_settings import DEVICE, MAX_LOADED_MODELS
 from hazard_detection.config.models import DEFAULT_MODEL_ID, ModelSpec, get_model_catalog, get_model_spec
 
@@ -105,7 +106,10 @@ class ModelManager:
             self._evict_if_needed(model_id)
 
             try:
-                engine: InferenceEngine = UltralyticsEngine(weights=spec.weights)
+                if spec.backend == "yolov5":
+                    engine: InferenceEngine = Yolov5Engine(weights=spec.weights)
+                else:
+                    engine = UltralyticsEngine(weights=spec.weights)
             except Exception as exc:
                 self._errors[model_id] = str(exc)
                 raise

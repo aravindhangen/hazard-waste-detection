@@ -1,8 +1,9 @@
 """
 Run 4 — YOLOv5s-Seg academic baseline / production model.
 
-Trains YOLOv5s-seg on the frozen hazard_dataset_clean split, evaluates on the
-held-out test set, and writes reports under runs/yolov5s_run4/ only.
+Trains YOLOv5s-seg on the frozen hazard_dataset_clean split using the official
+ultralytics/yolov5 repository, evaluates on val/test, and writes reports under
+runs/yolov5s_run4/ only.
 """
 from __future__ import annotations
 
@@ -16,7 +17,10 @@ if str(_ROOT) not in sys.path:
 import argparse
 import json
 import os
+import re
 import shutil
+import subprocess
+import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 
@@ -26,9 +30,10 @@ from hazard_detection.config import (
     CLASS_NAMES,
     CLEAN_DATASET_ROOT,
     CLEAN_DATA_YAML,
-    PRETRAINED_DIR,
+    PROJECT_ROOT,
     RUN4_DIR,
     RUN4_PRETRAINED,
+    YOLOV5_DIR,
 )
 
 DATA_YAML = CLEAN_DATA_YAML
@@ -37,7 +42,13 @@ RUN4_TRAIN_DIR = RUN4_ROOT / "train"
 RUN4_WEIGHTS_DIR = RUN4_ROOT / "weights"
 RUN4_EVAL_DIR = RUN4_ROOT / "evaluation"
 BEST_RUN4_NAME = "best_yolov5s.pt"
-PRETRAINED = str(RUN4_PRETRAINED) if RUN4_PRETRAINED.exists() else "yolov5s-seg.pt"
+DEFAULT_RUN_NAME = "train"
+DEFAULT_CFG = "models/segment/yolov5s-seg.yaml"
+DEFAULT_HYP = "data/hyps/hyp.scratch-high.yaml"
+PRETRAINED_NAME = "yolov5s-seg.pt"
+PRETRAINED_URL = (
+    "https://github.com/ultralytics/yolov5/releases/download/v7.0/yolov5s-seg.pt"
+)
 
 
 @dataclass
@@ -58,6 +69,36 @@ def f1_score(precision: float, recall: float) -> float:
     return 2 * precision * recall / (precision + recall)
 
 
+def _safe_print(text: str) -> None:
+  try:
+    print(text)
+  except UnicodeEncodeError:
+    print(text.encode("ascii", errors="replace").decode("ascii"))
+
+
+def run_command(command: list[str], cwd: Path, capture: bool = False) -> subprocess.CompletedProcess[str]:
+    print("\n$ " + " ".join(command))
+    if capture:
+        result = subprocess.run(
+            command,
+            cwd=str(cwd),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        if result.stdout:
+            _safe_print(result.stdout)
+        if result.stderr:
+            _safe_print(result.stderr)
+    else:
+        result = subprocess.run(command, cwd=str(cwd), check=False)
+    if result.returncode != 0:
+        raise RuntimeError(f"Command failed with exit code {result.returncode}: {' '.join(command)}")
+    return result
+
+
 def check_gpu() -> dict:
     import torch
 
@@ -76,6 +117,28 @@ def ensure_run4_layout() -> None:
     RUN4_EVAL_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def ensure_yolov5_repo() -> None:
+    if YOLOV5_DIR.exists():
+        return
+    run_command(
+        ["git", "clone", "--depth", "1", "https://github.com/ultralytics/yolov5.git", "yolov5"],
+        PROJECT_ROOT,
+    )
+
+
+def ensure_pretrained_weights() -> Path:
+    if RUN4_PRETRAINED.exists():
+        return RUN4_PRETRAINED
+
+    target = YOLOV5_DIR / PRETRAINED_NAME
+    if target.exists():
+        return target
+
+    print(f"Downloading pretrained weights: {PRETRAINED_URL}")
+    urllib.request.urlretrieve(PRETRAINED_URL, target)
+    return target
+
+
 def train_run4(
     device: str,
     epochs: int,
@@ -84,31 +147,51 @@ def train_run4(
     workers: int,
     resume: bool,
 ) -> Path:
-    from ultralytics import YOLO
-
+    ensure_yolov5_repo()
     ensure_run4_layout()
-    model = YOLO(PRETRAINED)
-    train_kwargs = {
-        "data": str(DATA_YAML.resolve()),
-        "epochs": epochs,
-        "imgsz": img_size,
-        "batch": batch_size,
-        "device": device,
-        "workers": workers,
-        "project": str(RUN4_ROOT),
-        "name": "train",
-        "exist_ok": True,
-        "pretrained": True,
-        "verbose": True,
-    }
+
     last_ckpt = RUN4_TRAIN_DIR / "weights" / "last.pt"
     if resume and last_ckpt.exists():
-        train_kwargs["resume"] = str(last_ckpt)
-        print(f"Resuming from checkpoint: {last_ckpt}")
+        weights = last_ckpt
+        print(f"Resuming from checkpoint: {weights}")
+    else:
+        weights = ensure_pretrained_weights()
+
+    command = [
+        sys.executable,
+        "segment/train.py",
+        "--workers",
+        str(workers),
+        "--device",
+        device,
+        "--batch-size",
+        str(batch_size),
+        "--data",
+        str(DATA_YAML.resolve()),
+        "--imgsz",
+        str(img_size),
+        "--cfg",
+        DEFAULT_CFG,
+        "--weights",
+        str(weights.resolve()),
+        "--name",
+        DEFAULT_RUN_NAME,
+        "--hyp",
+        DEFAULT_HYP,
+        "--epochs",
+        str(epochs),
+        "--exist-ok",
+        "--patience",
+        "50",
+        "--project",
+        str(RUN4_ROOT.resolve()),
+    ]
+    if resume and last_ckpt.exists():
+        command.extend(["--resume", str(last_ckpt.resolve())])
 
     print("\nStarting Run 4 training (YOLOv5s-Seg)...")
     print(f"  Output directory: {RUN4_ROOT}")
-    model.train(**train_kwargs)
+    run_command(command, YOLOV5_DIR)
 
     source_best = RUN4_TRAIN_DIR / "weights" / "best.pt"
     if not source_best.exists():
@@ -120,30 +203,96 @@ def train_run4(
     return target_best
 
 
-def extract_metrics(results, split: str) -> SplitMetrics:
-    summary = results.summary(decimals=4)
-    per_class: dict[str, dict[str, float]] = {}
-    for row in summary:
-        class_name = row["Class"]
-        precision = float(row["Mask-P"])
-        recall = float(row["Mask-R"])
-        per_class[class_name] = {
+def _strip_ansi(text: str) -> str:
+    return re.sub(r"\x1b\[[0-9;]*m", "", text)
+
+
+def parse_metrics_output(output: str, class_names: list[str]) -> SplitMetrics:
+    metrics = SplitMetrics(split="")
+    lines = _strip_ansi(output).splitlines()
+
+    overall_pattern = re.compile(
+        r"^all\s+(\d+)\s+(\d+)\s+"
+        r"([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+"
+        r"([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)"
+    )
+    for line in lines:
+        match = overall_pattern.match(line.strip())
+        if match:
+            metrics.precision_mask = float(match.group(7))
+            metrics.recall_mask = float(match.group(8))
+            metrics.map50_mask = float(match.group(9))
+            metrics.map_mask = float(match.group(10))
+            metrics.f1_mask = f1_score(metrics.precision_mask, metrics.recall_mask)
+            break
+
+    class_pattern = re.compile(
+        r"^(\S+)\s+\d+\s+\d+\s+"
+        r"([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+"
+        r"([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)"
+    )
+    for line in lines:
+        match = class_pattern.match(line.strip())
+        if not match:
+            continue
+        class_name = match.group(1)
+        if class_name not in class_names:
+            continue
+        precision = float(match.group(6))
+        recall = float(match.group(7))
+        metrics.per_class[class_name] = {
             "precision": precision,
             "recall": recall,
             "f1": f1_score(precision, recall),
-            "map50": float(row["mAP50"]),
-            "map50_95": float(row["mAP50-95"]),
+            "map50": float(match.group(8)),
+            "map50_95": float(match.group(9)),
         }
 
-    return SplitMetrics(
-        split=split,
-        precision_mask=float(results.seg.mp),
-        recall_mask=float(results.seg.mr),
-        f1_mask=f1_score(float(results.seg.mp), float(results.seg.mr)),
-        map50_mask=float(results.seg.map50),
-        map_mask=float(results.seg.map),
-        per_class=per_class,
+    speed_match = re.search(
+        r"Speed: [\d.]+ms pre-process, ([\d.]+)ms inference, ([\d.]+)ms NMS per image",
+        output,
     )
+    if speed_match:
+        metrics.inference_ms = float(speed_match.group(1)) + float(speed_match.group(2))
+
+    return metrics
+
+
+def evaluate_split(
+    weights: Path,
+    split: str,
+    device: str,
+    batch_size: int,
+    img_size: int,
+) -> SplitMetrics:
+    class_names = [CLASS_NAMES[i] for i in sorted(CLASS_NAMES)]
+    command = [
+        sys.executable,
+        "segment/val.py",
+        "--data",
+        str(DATA_YAML.resolve()),
+        "--weights",
+        str(weights.resolve()),
+        "--batch-size",
+        str(batch_size),
+        "--imgsz",
+        str(img_size),
+        "--task",
+        split,
+        "--device",
+        device,
+        "--verbose",
+        "--project",
+        str(RUN4_EVAL_DIR.resolve()),
+        "--name",
+        split,
+        "--exist-ok",
+    ]
+    result = run_command(command, YOLOV5_DIR, capture=True)
+    output = (result.stdout or "") + "\n" + (result.stderr or "")
+    metrics = parse_metrics_output(output, class_names)
+    metrics.split = split
+    return metrics
 
 
 def evaluate_run4(
@@ -152,49 +301,43 @@ def evaluate_run4(
     batch_size: int,
     img_size: int,
 ) -> tuple[SplitMetrics, SplitMetrics, float | None]:
-    from ultralytics import YOLO
-
-    model = YOLO(str(weights))
-
     print("\nRunning Run 4 validation evaluation...")
-    val_results = model.val(
-        data=str(DATA_YAML.resolve()),
-        split="val",
-        imgsz=img_size,
-        batch=batch_size,
-        device=device,
-        project=str(RUN4_EVAL_DIR),
-        name="val",
-        exist_ok=True,
-        verbose=True,
-    )
-    val_metrics = extract_metrics(val_results, "val")
+    val_metrics = evaluate_split(weights, "val", device, batch_size, img_size)
 
     print("\nRunning Run 4 untouched test evaluation...")
-    test_results = model.val(
-        data=str(DATA_YAML.resolve()),
-        split="test",
-        imgsz=img_size,
-        batch=batch_size,
-        device=device,
-        project=str(RUN4_EVAL_DIR),
-        name="test",
-        exist_ok=True,
-        verbose=True,
-    )
-    test_metrics = extract_metrics(test_results, "test")
+    test_metrics = evaluate_split(weights, "test", device, batch_size, img_size)
 
     print("\nBenchmarking Run 4 inference speed (batch=1)...")
-    speed_results = model.val(
-        data=str(DATA_YAML.resolve()),
-        split="val",
-        imgsz=img_size,
-        batch=1,
-        device=device,
-        verbose=False,
+    speed_command = [
+        sys.executable,
+        "segment/val.py",
+        "--data",
+        str(DATA_YAML.resolve()),
+        "--weights",
+        str(weights.resolve()),
+        "--batch-size",
+        "1",
+        "--imgsz",
+        str(img_size),
+        "--task",
+        "speed",
+        "--device",
+        device,
+        "--project",
+        str(RUN4_EVAL_DIR.resolve()),
+        "--name",
+        "speed",
+        "--exist-ok",
+    ]
+    speed_result = run_command(speed_command, YOLOV5_DIR, capture=True)
+    speed_output = (speed_result.stdout or "") + "\n" + (speed_result.stderr or "")
+    speed_match = re.search(
+        r"Speed: [\d.]+ms pre-process, ([\d.]+)ms inference, ([\d.]+)ms NMS per image",
+        speed_output,
     )
-    speed = speed_results.speed
-    infer_ms = speed["preprocess"] + speed["inference"] + speed["postprocess"]
+    infer_ms = None
+    if speed_match:
+        infer_ms = float(speed_match.group(1)) + float(speed_match.group(2))
     return val_metrics, test_metrics, infer_ms
 
 
@@ -216,7 +359,7 @@ def write_run4_report(
         "Hazard Waste Detection - Run 4 YOLOv5s-Seg Evaluation Report",
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
-        "NOTE: Run 4 replaces YOLOv9 as the academic baseline / production Ultralytics model.",
+        "NOTE: Run 4 uses the official ultralytics/yolov5 segmentation repo.",
         "",
         "Environment",
         f"  PyTorch: {gpu_info['torch_version']}",
@@ -296,7 +439,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--device", default="", help="CUDA device id or 'cpu'")
     parser.add_argument("--epochs", type=int, default=100)
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--img-size", type=int, default=640)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--skip-train", action="store_true", help="Evaluate existing Run 4 weights only.")
@@ -314,10 +457,11 @@ def main() -> None:
     print("RUN 4 — YOLOv5s-SEG (ACADEMIC BASELINE / PRODUCTION)")
     print("=" * 70)
     print(f"\nRun 4 output root: {RUN4_ROOT}")
-    print(f"Pretrained base: {PRETRAINED}")
 
     if not DATA_YAML.exists():
         raise FileNotFoundError(f"Dataset config not found: {DATA_YAML}")
+
+    ensure_yolov5_repo()
 
     if args.skip_train:
         weights = Path(args.weights) if args.weights else RUN4_WEIGHTS_DIR / BEST_RUN4_NAME

@@ -10,6 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     libgl1 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
@@ -18,6 +19,8 @@ RUN pip install --no-cache-dir torch torchvision --index-url https://download.py
 
 COPY requirements.txt requirements-train.txt requirements-api.txt requirements-run2.txt ./
 RUN pip install --no-cache-dir -r requirements-api.txt -r requirements-run2.txt
+
+RUN git clone --depth 1 --branch v7.0 https://github.com/ultralytics/yolov5.git /app/yolov5
 
 COPY hazard_detection/ ./hazard_detection/
 COPY api/ ./api/
@@ -31,9 +34,10 @@ COPY runs/yolov8s_run3/weights/best_yolov8s.pt \
 COPY runs/comparison/all_runs_comparison.json \
     ./runs/comparison/all_runs_comparison.json
 
-# Optional: uncomment after Run 4 training
-# COPY runs/yolov5s_run4/weights/best_yolov5s.pt \
-#     ./runs/yolov5s_run4/weights/best_yolov5s.pt
+COPY runs/yolov5s_run4/weights/best_yolov5s.pt \
+    ./runs/yolov5s_run4/weights/best_yolov5s.pt
+COPY runs/yolov5s_run4/evaluation/run4_evaluation_report.json \
+    ./runs/yolov5s_run4/evaluation/run4_evaluation_report.json
 
 RUN chmod +x ./scripts/render_start.sh
 

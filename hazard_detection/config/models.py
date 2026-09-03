@@ -20,8 +20,6 @@ from hazard_detection.config.paths import (
     RUN4_DIR,
 )
 
-BackendType = Literal["yolov9", "ultralytics"]
-
 # Run 3 paths (also in hazard_detection.config.paths)
 
 
@@ -51,7 +49,7 @@ class ModelSpec:
     badge: str | None = None
 
 
-BackendType = Literal["ultralytics"]
+BackendType = Literal["ultralytics", "yolov5"]
 
 
 def _load_run4_benchmark() -> BenchmarkMetrics:
@@ -104,7 +102,7 @@ def _yolov5_spec() -> ModelSpec:
         id="yolov5",
         name="YOLOv5s-Seg",
         short_name="YOLOv5s",
-        backend="ultralytics",
+        backend="yolov5",
         weights=weights,
         role="production" if trained else "candidate",
         description=(

@@ -58,6 +58,7 @@ from hazard_detection.config.paths import (
     RUN4_WEIGHTS,
     SCRIPTS_DIR,
     VISUAL_QA_DIR,
+    YOLOV5_DIR,
 )
 
 __all__ = [
@@ -114,4 +115,5 @@ __all__ = [
     "VAL_RATIO",
     "VISUAL_QA_DIR",
     "WEIGHTS_PATH",
+    "YOLOV5_DIR",
 ]

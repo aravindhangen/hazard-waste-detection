@@ -12,7 +12,7 @@ services:
       - key: HAZARD_DEVICE
         value: cpu
       - key: HAZARD_DEFAULT_MODEL_ID
-        value: yolo11s
+        value: yolov5
       - key: HAZARD_EAGER_LOAD
         value: "false"
       - key: HAZARD_BACKGROUND_WARMUP
