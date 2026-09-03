@@ -76,3 +76,5 @@ runs/yolov8s_run3/train/
 runs/yolov5s_run4/train/
 # Legacy YOLOv9 training visuals (may contain dataset photos)
 yolov9/runs/
+yolov9/data/images/
+yolov9/figure/

@@ -40,18 +40,18 @@ def _load_report(path: Path, run_id: str, label: str, default_model: str, defaul
     if not path.exists():
         return None
     data = json.loads(path.read_text(encoding="utf-8"))
-    test = data["test"]
-    cylinder = test["per_class"].get("Cylinder", {})
+    split = data["validation"]
+    cylinder = split["per_class"].get("Cylinder", {})
     infer_ms = data.get("inference_ms")
     return RunSnapshot(
         run_id=run_id,
         name=label,
         model=data.get("model", default_model),
         cylinder_recall=float(cylinder.get("recall", 0.0)),
-        map50=float(test["map50_mask"]),
-        map50_95=float(test["map_mask"]),
-        recall=float(test["recall_mask"]),
-        precision=float(test["precision_mask"]),
+        map50=float(split["map50_mask"]),
+        map50_95=float(split["map_mask"]),
+        recall=float(split["recall_mask"]),
+        precision=float(split["precision_mask"]),
         fps=(1000.0 / infer_ms) if infer_ms else None,
         weights=data.get("weights", default_weights),
     )
@@ -110,17 +110,17 @@ def main() -> None:
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
         "Models: YOLOv5s (Run 4), YOLO11s (Run 2), YOLOv8s (Run 3)",
-        "Priority: Cylinder Recall > mAP@50 > mAP@50:95 > FPS",
-        f"Meaningful delta threshold: {MEANINGFUL_DELTA:.2f} on 39-image test set",
+        "Priority: Cylinder Recall > mAP@50 > Precision > Recall > FPS",
+        f"Metrics: validation set (79 images). Held-out test (39 images) in per-run reports.",
         "",
-        f"{'Run':<22} {'Model':<18} {'Cyl.Recall':>10} {'mAP@50':>8} {'Recall':>8} {'FPS':>8}",
-        "-" * 78,
+        f"{'Run':<22} {'Model':<18} {'Precision':>10} {'Recall':>8} {'Cyl.Recall':>10} {'mAP@50':>8} {'FPS':>8}",
+        "-" * 88,
     ]
 
     for run in runs:
         lines.append(
-            f"{run.name:<22} {run.model:<18} {fmt(run.cylinder_recall):>10} {fmt(run.map50):>8} "
-            f"{fmt(run.recall):>8} {fmt(run.fps):>8}"
+            f"{run.name:<22} {run.model:<18} {fmt(run.precision):>10} {fmt(run.recall):>8} "
+            f"{fmt(run.cylinder_recall):>10} {fmt(run.map50):>8} {fmt(run.fps):>8}"
         )
 
     if not run4:
@@ -135,9 +135,11 @@ def main() -> None:
     lines.extend(
         [
             "",
-            "Leaders on held-out test set",
+            "Leaders on validation set",
             f"  Best Cylinder recall: {best_cylinder.model} ({best_cylinder.cylinder_recall:.3f})",
             f"  Best mAP@50:          {best_map50.model} ({best_map50.map50:.3f})",
+            "",
+            "Target: 75-80% precision & recall (course). See per-run reports for held-out test scores.",
             "",
             "Production recommendation",
             "  YOLOv5s (Run 4) is the default production model for cloud-friendly deployment.",

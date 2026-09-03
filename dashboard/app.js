@@ -57,10 +57,11 @@ const MODEL_META = {
 };
 
 const RUN3_FALLBACK_BENCHMARK = {
-  cylinder_recall: 0.72,
-  map50: 0.656,
-  map50_95: 0.45,
-  recall: 0.663,
+  cylinder_recall: 0.783,
+  map50: 0.704,
+  map50_95: 0.513,
+  precision: 0.693,
+  recall: 0.676,
   fps: 68.7,
 };
 
@@ -417,6 +418,8 @@ function renderBenchmarkTable() {
         ${modelRunLabel(model) ? `<div class="model-run-label">${modelRunLabel(model)}</div>` : ""}
       </td>
       <td>${statusLabel(model)}${speedster && modelId(speedster) === modelId(model) ? ' <span class="speed-badge">Fastest</span>' : ""}</td>
+      <td>${testedModel ? formatPct(bench.precision) : "—"}</td>
+      <td>${testedModel ? formatPct(bench.recall) : "—"}</td>
       <td>${testedModel ? formatPct(bench.map50) : "—"}</td>
       <td>${testedModel ? formatPct(bench.cylinder_recall) : "—"}</td>
       <td>${fpsCell}</td>
@@ -438,7 +441,7 @@ async function loadModelCatalog() {
     renderSelectionBanner();
   } catch (err) {
     els.benchmarkBody.innerHTML =
-      `<tr class="empty-row"><td colspan="5">Could not load model catalog: ${err.message}</td></tr>`;
+      `<tr class="empty-row"><td colspan="7">Could not load model catalog: ${err.message}</td></tr>`;
   }
 }
 

@@ -58,16 +58,16 @@ def _load_run4_benchmark() -> BenchmarkMetrics:
     import json
 
     data = json.loads(RUN4_REPORT_JSON.read_text(encoding="utf-8"))
-    test = data["test"]
-    cylinder = test["per_class"].get("Cylinder", {})
+    split = data["validation"]
+    cylinder = split["per_class"].get("Cylinder", {})
     infer_ms = data.get("inference_ms")
     return BenchmarkMetrics(
         cylinder_recall=float(cylinder.get("recall", 0.0)) if cylinder else None,
-        map50=float(test["map50_mask"]),
-        map50_95=float(test["map_mask"]),
-        recall=float(test["recall_mask"]),
-        precision=float(test["precision_mask"]),
-        f1=float(test["f1_mask"]),
+        map50=float(split["map50_mask"]),
+        map50_95=float(split["map_mask"]),
+        recall=float(split["recall_mask"]),
+        precision=float(split["precision_mask"]),
+        f1=float(split["f1_mask"]),
         fps=1000.0 / float(infer_ms) if infer_ms else None,
     )
 
@@ -127,27 +127,27 @@ def _resolve_run4_weights() -> Path:
 def _load_run2_benchmark() -> BenchmarkMetrics:
     if not RUN2_REPORT_JSON.exists():
         return BenchmarkMetrics(
-            cylinder_recall=0.714,
-            map50=0.643,
-            map50_95=0.444,
-            recall=0.648,
-            precision=0.702,
-            f1=0.674,
+            cylinder_recall=0.808,
+            map50=0.722,
+            map50_95=0.522,
+            recall=0.698,
+            precision=0.671,
+            f1=0.685,
             fps=26.6,
         )
     import json
 
     data = json.loads(RUN2_REPORT_JSON.read_text(encoding="utf-8"))
-    test = data["test"]
-    cylinder = test["per_class"]["Cylinder"]
+    split = data["validation"]
+    cylinder = split["per_class"]["Cylinder"]
     infer_ms = data.get("inference_ms")
     return BenchmarkMetrics(
         cylinder_recall=float(cylinder["recall"]),
-        map50=float(test["map50_mask"]),
-        map50_95=float(test["map_mask"]),
-        recall=float(test["recall_mask"]),
-        precision=float(test["precision_mask"]),
-        f1=float(test["f1_mask"]),
+        map50=float(split["map50_mask"]),
+        map50_95=float(split["map_mask"]),
+        recall=float(split["recall_mask"]),
+        precision=float(split["precision_mask"]),
+        f1=float(split["f1_mask"]),
         fps=1000.0 / float(infer_ms) if infer_ms else None,
     )
 
@@ -158,16 +158,16 @@ def _load_run3_benchmark() -> BenchmarkMetrics:
     import json
 
     data = json.loads(RUN3_REPORT_JSON.read_text(encoding="utf-8"))
-    test = data["test"]
-    cylinder = test["per_class"].get("Cylinder", {})
+    split = data["validation"]
+    cylinder = split["per_class"].get("Cylinder", {})
     infer_ms = data.get("inference_ms")
     return BenchmarkMetrics(
         cylinder_recall=float(cylinder.get("recall", 0.0)) if cylinder else None,
-        map50=float(test["map50_mask"]),
-        map50_95=float(test["map_mask"]),
-        recall=float(test["recall_mask"]),
-        precision=float(test["precision_mask"]),
-        f1=float(test["f1_mask"]),
+        map50=float(split["map50_mask"]),
+        map50_95=float(split["map_mask"]),
+        recall=float(split["recall_mask"]),
+        precision=float(split["precision_mask"]),
+        f1=float(split["f1_mask"]),
         fps=1000.0 / float(infer_ms) if infer_ms else None,
     )
 

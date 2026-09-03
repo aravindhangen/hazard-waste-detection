@@ -86,10 +86,10 @@
 
       <div class="benchmark-panel" id="benchmark-panel">
         <div class="benchmark-header">
-          <h3>Held-out test set benchmarks</h3>
+          <h3>Validation set benchmarks</h3>
           <p id="benchmark-recommendation"></p>
           <div class="selection-banner hidden" id="selection-banner"></div>
-          <p class="benchmark-note">All three models trained on the frozen 393-image dataset; metrics from the 39-image held-out test set.</p>
+          <p class="benchmark-note">All three models trained on the frozen 393-image dataset; precision/recall from the 79-image validation split. Target: 75–80%.</p>
         </div>
         <div class="benchmark-table-wrap">
           <table class="benchmark-table" id="benchmark-table">
@@ -97,13 +97,15 @@
               <tr>
                 <th>Model</th>
                 <th>Status</th>
+                <th>Precision</th>
+                <th>Recall</th>
                 <th>mAP@50</th>
                 <th>Cylinder Recall</th>
                 <th>FPS</th>
               </tr>
             </thead>
             <tbody id="benchmark-body">
-              <tr class="empty-row"><td colspan="5">Loading model catalog…</td></tr>
+              <tr class="empty-row"><td colspan="7">Loading model catalog…</td></tr>
             </tbody>
           </table>
         </div>

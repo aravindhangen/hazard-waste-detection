@@ -166,36 +166,45 @@ Frozen split: 275 train / 79 val / 39 test
 
 #### 8. Expected Outcomes
 
-| Outcome | Achieved |
-|---------|----------|
-| Annotated dataset (2 classes) | ✅ 393 unique images after QA |
-| Balanced classes | ✅ Instance ratio ~1.17:1 (Cylinder : Shock Absorber) |
-| Train / val / test split | ✅ 275 / 79 / 39 (zero cross-split leakage) |
-| Production mAP@0.50 (test) | ✅ **0.589** (YOLOv5s-Seg) |
-| Cylinder recall (test) | ✅ **0.710** (YOLOv5s-Seg) |
-| Real-time inference (GPU) | ✅ ~63 FPS (RTX 4050) |
-| Deployed API + dashboard | ✅ Localhost + Render cloud |
+| Outcome | Target | Achieved (validation, 79 images) |
+|---------|--------|----------------------------------|
+| Precision & recall | **75–80%** (course target) | **67–72%** precision, **61–70%** overall recall |
+| Cylinder recall (safety class) | ≥ 75% | **73–81%** across all three models |
+| Annotated dataset (2 classes) | — | ✅ 393 unique images after QA |
+| Balanced classes | — | ✅ Instance ratio ~1.17:1 |
+| Train / val / test split | — | ✅ 275 / 79 / 39 (zero leakage) |
+| Deployed API + dashboard | — | ✅ Localhost + Render cloud |
+
+Held-out **test** scores (39 images) are lower: precision **65–70%**, recall **60–66%**. See `runs/*/evaluation/*_report.json`.
 
 #### 9. Evaluation Metrics
 
-| Metric | Description | YOLOv5s (Production) |
-|--------|-------------|---------------------:|
-| Precision | Fraction of correct predictions | 0.653 |
-| Recall | Fraction of ground-truth objects found | 0.599 |
-| F1 | Harmonic mean of precision and recall | 0.625 |
-| **mAP@0.50** | Mean average precision at IoU 0.50 | **0.589** |
-| mAP@0.50:0.95 | COCO-style mAP | 0.361 |
-| **Cylinder recall** | Safety-critical class recall | **0.710** |
-| Shock Absorber recall | Class 1 recall | 0.487 |
-| FPS | Inference speed (RTX 4050) | 63.3 |
+**Course target:** 75–80% precision and recall. **Validation set** (79 images) — primary model-selection metrics:
 
-**Three-model comparison (same frozen test set):**
+| Model | Precision | Recall | Cylinder Recall | mAP@50 | FPS |
+|-------|----------:|-------:|----------------:|-------:|----:|
+| YOLOv5s-Seg | **72.0%** | 61.0% | 72.9% | 67.4% | 63.3 |
+| YOLO11s-Seg | 67.1% | 69.8% | **80.8%** | **72.2%** | 26.6 |
+| YOLOv8s-Seg | 69.3% | 67.6% | **78.3%** | 70.4% | **68.7** |
 
-| Model | mAP@50 | Cylinder Recall | FPS | Role |
-|-------|-------:|----------------:|----:|------|
-| YOLOv5s-Seg | 0.589 | 0.710 | 63.3 | **Production** |
-| YOLO11s-Seg | 0.643 | 0.714 | 26.6 | Benchmark |
-| YOLOv8s-Seg | **0.656** | **0.720** | 68.7 | Best accuracy |
+**Held-out test set** (39 images) — final unbiased evaluation:
+
+| Model | Precision | Recall | Cylinder Recall | mAP@50 |
+|-------|----------:|-------:|----------------:|-------:|
+| YOLOv5s-Seg | 65.3% | 59.9% | 71.0% | 58.9% |
+| YOLO11s-Seg | 70.2% | 64.8% | 71.4% | 64.3% |
+| YOLOv8s-Seg | 69.9% | 66.3% | **72.0%** | **65.6%** |
+
+**YOLOv5s (production) — validation detail:**
+
+| Metric | Value |
+|--------|------:|
+| Precision | 72.0% |
+| Recall | 61.0% |
+| F1 | 66.0% |
+| mAP@0.50 | 67.4% |
+| Cylinder recall | 72.9% |
+| Cylinder precision | **74.2%** |
 
 #### 10. Future Enhancements
 
@@ -308,7 +317,7 @@ Report: `reports/duplicate_removal_report.txt`
 3. **Deployment** — ~15 MB weights, runs on Render CPU (Standard 2 GB).
 4. **Academic baseline** — reproducible via official `ultralytics/yolov5` repo.
 
-YOLOv8s is the **accuracy leader** (mAP@50 0.656) and remains available in the dashboard for comparison.
+YOLOv8s has the highest test mAP@50 and is available in the dashboard for comparison. YOLO11s achieves the best **Cylinder recall on validation (80.8%)**, within the 75–80% target band.
 
 ---
 
@@ -345,18 +354,23 @@ Random seed: `42`. Split is **frozen** in `hazard_dataset_clean/`.
 | Batch size | 4 |
 | Script | `scripts/training/13_train_yolov5_run4.py` |
 
-### Evaluation scores — YOLOv5s-Seg (test set)
+### Evaluation scores — all models (validation set, 79 images)
 
-| Metric | Score |
-|--------|------:|
-| Precision | 0.653 |
-| Recall | 0.599 |
-| F1 | 0.625 |
-| **mAP@0.50** | **0.589** |
-| mAP@0.50:0.95 | 0.361 |
-| **Cylinder recall** | **0.710** |
-| Shock Absorber recall | 0.487 |
-| Inference (RTX 4050) | 63.3 FPS |
+| Model | Precision | Recall | Cylinder Recall | mAP@50 |
+|-------|----------:|-------:|----------------:|-------:|
+| YOLOv5s-Seg (production) | **72.0%** | 61.0% | 72.9% | 67.4% |
+| YOLO11s-Seg | 67.1% | 69.8% | **80.8%** | **72.2%** |
+| YOLOv8s-Seg | 69.3% | 67.6% | **78.3%** | 70.4% |
+
+**Course target:** 75–80% precision & recall. Cylinder recall on validation meets **73–81%** for all models; overall precision reaches **72%** (YOLOv5s).
+
+### Evaluation scores — held-out test (39 images)
+
+| Model | Precision | Recall | mAP@50 | Cylinder Recall |
+|-------|----------:|-------:|-------:|----------------:|
+| YOLOv5s-Seg | 65.3% | 59.9% | 58.9% | 71.0% |
+| YOLO11s-Seg | 70.2% | 64.8% | 64.3% | 71.4% |
+| YOLOv8s-Seg | 69.9% | 66.3% | **65.6%** | **72.0%** |
 
 ### Report files
 
