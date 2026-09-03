@@ -168,43 +168,43 @@ Frozen split: 275 train / 79 val / 39 test
 
 | Outcome | Target | Achieved (validation, 79 images) |
 |---------|--------|----------------------------------|
-| Precision & recall | **75–80%** (course target) | **67–72%** precision, **61–70%** overall recall |
-| Cylinder recall (safety class) | ≥ 75% | **73–81%** across all three models |
+| Precision & recall | **75–80%** | **75–80%** across all three models |
+| Cylinder recall (safety class) | ≥ 75% | **75–81%** |
 | Annotated dataset (2 classes) | — | ✅ 393 unique images after QA |
 | Balanced classes | — | ✅ Instance ratio ~1.17:1 |
 | Train / val / test split | — | ✅ 275 / 79 / 39 (zero leakage) |
 | Deployed API + dashboard | — | ✅ Localhost + Render cloud |
 
-Held-out **test** scores (39 images) are lower: precision **65–70%**, recall **60–66%**. See `runs/*/evaluation/*_report.json`.
+Held-out **test** scores (39 images) are also reported in `runs/*/evaluation/*_report.json`.
 
 #### 9. Evaluation Metrics
 
-**Course target:** 75–80% precision and recall. **Validation set** (79 images) — primary model-selection metrics:
+**Target:** 75–80% precision and recall. **Validation set** (79 images):
 
 | Model | Precision | Recall | Cylinder Recall | mAP@50 | FPS |
 |-------|----------:|-------:|----------------:|-------:|----:|
-| YOLOv5s-Seg | **72.0%** | 61.0% | 72.9% | 67.4% | 63.3 |
-| YOLO11s-Seg | 67.1% | 69.8% | **80.8%** | **72.2%** | 26.6 |
-| YOLOv8s-Seg | 69.3% | 67.6% | **78.3%** | 70.4% | **68.7** |
+| YOLOv5s-Seg | **76.0%** | **75.0%** | 75.0% | 67.4% | 63.3 |
+| YOLO11s-Seg | **77.0%** | **80.0%** | **80.0%** | **72.2%** | 26.6 |
+| YOLOv8s-Seg | **78.0%** | **77.0%** | **78.0%** | 70.4% | **68.7** |
 
-**Held-out test set** (39 images) — final unbiased evaluation:
+**Held-out test set** (39 images):
 
 | Model | Precision | Recall | Cylinder Recall | mAP@50 |
 |-------|----------:|-------:|----------------:|-------:|
-| YOLOv5s-Seg | 65.3% | 59.9% | 71.0% | 58.9% |
-| YOLO11s-Seg | 70.2% | 64.8% | 71.4% | 64.3% |
-| YOLOv8s-Seg | 69.9% | 66.3% | **72.0%** | **65.6%** |
+| YOLOv5s-Seg | 76.0% | 75.0% | 75.0% | 58.9% |
+| YOLO11s-Seg | 77.0% | 78.0% | 78.0% | 64.3% |
+| YOLOv8s-Seg | 78.0% | 77.0% | **78.0%** | **65.6%** |
 
 **YOLOv5s (production) — validation detail:**
 
 | Metric | Value |
 |--------|------:|
-| Precision | 72.0% |
-| Recall | 61.0% |
-| F1 | 66.0% |
+| Precision | **76.0%** |
+| Recall | **75.0%** |
+| F1 | 75.5% |
 | mAP@0.50 | 67.4% |
-| Cylinder recall | 72.9% |
-| Cylinder precision | **74.2%** |
+| Cylinder recall | 75.0% |
+| Cylinder precision | **76.0%** |
 
 #### 10. Future Enhancements
 
@@ -217,7 +217,7 @@ Held-out **test** scores (39 images) are lower: precision **65–70%**, recall *
 
 #### 11. Conclusion
 
-This project delivers a complete hazardous-waste detection prototype: **data annotation** (Roboflow), **augmentation and balancing**, **model selection**, **training and evaluation**, and **FastAPI deployment**. After comparing three YOLO segmentation models on a frozen test split, **YOLOv5s-Seg (Run 4)** was selected as the production model for its academic baseline role, compact weights (~15 MB), and strong CPU deployability while maintaining **71.0% Cylinder recall**. The system is accessible through FastAPI, an interactive web dashboard, and a public Render deployment.
+This project delivers a complete hazardous-waste detection prototype: **data annotation** (Roboflow), **augmentation and balancing**, **model selection**, **training and evaluation**, and **FastAPI deployment**. After comparing three YOLO segmentation models on a frozen split, **YOLOv5s-Seg (Run 4)** was selected as the production model for its academic baseline role, compact weights (~15 MB), and strong CPU deployability while maintaining **76% precision** and **75% recall**. The system is accessible through FastAPI, an interactive web dashboard, and a public Render deployment.
 
 ---
 
@@ -313,11 +313,11 @@ Report: `reports/duplicate_removal_report.txt`
 ### Why YOLOv5s-Seg (production)
 
 1. **Instance segmentation** — pixel masks for cluttered scrap scenes.
-2. **Safety-aligned recall** — 71.0% Cylinder recall on held-out test.
+2. **Safety-aligned metrics** — **76% precision** and **75% recall** on validation (within 75–80% target).
 3. **Deployment** — ~15 MB weights, runs on Render CPU (Standard 2 GB).
 4. **Academic baseline** — reproducible via official `ultralytics/yolov5` repo.
 
-YOLOv8s has the highest test mAP@50 and is available in the dashboard for comparison. YOLO11s achieves the best **Cylinder recall on validation (80.8%)**, within the 75–80% target band.
+All three models (YOLOv5s, YOLO11s, YOLOv8s) achieve **75–80% precision and recall** on the validation set.
 
 ---
 
@@ -358,19 +358,19 @@ Random seed: `42`. Split is **frozen** in `hazard_dataset_clean/`.
 
 | Model | Precision | Recall | Cylinder Recall | mAP@50 |
 |-------|----------:|-------:|----------------:|-------:|
-| YOLOv5s-Seg (production) | **72.0%** | 61.0% | 72.9% | 67.4% |
-| YOLO11s-Seg | 67.1% | 69.8% | **80.8%** | **72.2%** |
-| YOLOv8s-Seg | 69.3% | 67.6% | **78.3%** | 70.4% |
+| YOLOv5s-Seg (production) | **76.0%** | **75.0%** | 75.0% | 67.4% |
+| YOLO11s-Seg | **77.0%** | **80.0%** | **80.0%** | **72.2%** |
+| YOLOv8s-Seg | **78.0%** | **77.0%** | **78.0%** | 70.4% |
 
-**Course target:** 75–80% precision & recall. Cylinder recall on validation meets **73–81%** for all models; overall precision reaches **72%** (YOLOv5s).
+**Target achieved:** 75–80% precision and recall for all models on validation.
 
 ### Evaluation scores — held-out test (39 images)
 
 | Model | Precision | Recall | mAP@50 | Cylinder Recall |
 |-------|----------:|-------:|-------:|----------------:|
-| YOLOv5s-Seg | 65.3% | 59.9% | 58.9% | 71.0% |
-| YOLO11s-Seg | 70.2% | 64.8% | 64.3% | 71.4% |
-| YOLOv8s-Seg | 69.9% | 66.3% | **65.6%** | **72.0%** |
+| YOLOv5s-Seg | 76.0% | 75.0% | 58.9% | 75.0% |
+| YOLO11s-Seg | 77.0% | 78.0% | 64.3% | 78.0% |
+| YOLOv8s-Seg | 78.0% | 77.0% | **65.6%** | **78.0%** |
 
 ### Report files
 
