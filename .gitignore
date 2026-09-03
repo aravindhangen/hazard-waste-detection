@@ -36,10 +36,13 @@ Thumbs.db
 # Stray Ultralytics validation outputs (not part of documented runs)
 runs/segment/
 
-# Datasets — images stay local only (not published to GitHub)
+# Datasets — images and labels stay local only (not published to GitHub)
 hazard_dataset/images/
+hazard_dataset/labels/
 hazard_dataset_clean/images/
 hazard_dataset_clean/labels/
+hazard_dataset_clean/labels/**/*.cache
+hazard_dataset_clean/labels/**/*.cache.npy
 
 # Demo / QA / report figures (may contain scrap-yard photos)
 demo/*.jpg
