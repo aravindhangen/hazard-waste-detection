@@ -1,4 +1,10 @@
-# Hazardous Waste Detection — Final Report (Tasks 4 & 5)
+# Hazardous Waste Detection — Final Technical Report
+
+Covers **Tasks 4–6** in depth (model selection, training, deployment). For the full academic scope see:
+
+- [PROJECT_PROPOSAL.md](PROJECT_PROPOSAL.md) — Tasks 1 (proposal)
+- [PROJECT_ARCHITECTURE.md](PROJECT_ARCHITECTURE.md) — Task 1 (architecture + plan)
+- [TASK_DELIVERABLES.md](TASK_DELIVERABLES.md) — Tasks 2–6 (deliverable checklist)
 
 ## 1. Executive Summary
 

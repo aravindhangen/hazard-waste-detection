@@ -7,6 +7,21 @@ Instance segmentation for **Cylinders** and **Shock Absorbers** in scrap-yard im
 
 **Comparison models:** YOLO11s (Run 2), YOLOv8s (Run 3)
 
+**Live demo:** [hazard-waste-detection.onrender.com/dashboard/](https://hazard-waste-detection.onrender.com/dashboard/)
+
+## Academic project (Tasks 1–6)
+
+| Task | Topic | Document |
+|------|-------|----------|
+| **1** | Project architecture & proposal | [docs/PROJECT_ARCHITECTURE.md](docs/PROJECT_ARCHITECTURE.md) · [docs/PROJECT_PROPOSAL.md](docs/PROJECT_PROPOSAL.md) |
+| **2** | Roboflow annotation (Cylinder, Shock Absorber) | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md#task-2--data-annotation-roboflow) |
+| **3** | Augmentation & class balancing | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md#task-3--data-augmentation--balancing) |
+| **4** | Model selection & dataset preparation | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md#task-4--model-selection--dataset-preparation) |
+| **5** | Training & evaluation (275/79/39 split) | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md#task-5--training--evaluation) |
+| **6** | FastAPI deployment & API testing | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md#task-6--fastapi-deployment--api-testing) |
+
+**Key results (test set):** mAP@50 **0.589** · Cylinder recall **0.710** · ~63 FPS (GPU)
+
 ## Quick start
 
 ### Command Prompt (cmd)
@@ -111,7 +126,10 @@ Hazard_Waste_Detection/
 
 | Document | Purpose |
 |----------|---------|
-| [docs/FINAL_REPORT.md](docs/FINAL_REPORT.md) | Final project report |
+| [docs/PROJECT_PROPOSAL.md](docs/PROJECT_PROPOSAL.md) | **Task 1** — proposal (title, problem, objectives, methodology, tech stack, metrics, conclusion) |
+| [docs/PROJECT_ARCHITECTURE.md](docs/PROJECT_ARCHITECTURE.md) | **Task 1** — system architecture & step-by-step plan |
+| [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md) | **Tasks 2–6** — annotations, augmentation, model selection, training, FastAPI |
+| [docs/FINAL_REPORT.md](docs/FINAL_REPORT.md) | Technical report (dataset, models, evaluation, deployment) |
 | [docs/PRESENTATION.md](docs/PRESENTATION.md) | Presentation outline |
 | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | Demo rehearsal |
 | [docs/DOCKER.md](docs/DOCKER.md) | Docker deployment |
