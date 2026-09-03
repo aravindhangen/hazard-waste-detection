@@ -45,6 +45,8 @@ API_PORT = int(os.environ.get("PORT", os.environ.get("HAZARD_API_PORT", "8000"))
 EAGER_LOAD = os.environ.get("HAZARD_EAGER_LOAD", "true").lower() in ("1", "true", "yes")
 BACKGROUND_WARMUP = os.environ.get("HAZARD_BACKGROUND_WARMUP", "false").lower() in ("1", "true", "yes")
 MAX_LOADED_MODELS = int(os.environ.get("HAZARD_MAX_LOADED_MODELS", "3"))
+MAX_IMAGE_SIDE = int(os.environ.get("HAZARD_MAX_IMAGE_SIDE", "1280"))
+ANNOTATED_JPEG_QUALITY = int(os.environ.get("HAZARD_ANNOTATED_JPEG_QUALITY", "82"))
 
 HAZARD_METADATA = {
     "Cylinder": {
@@ -78,6 +80,8 @@ __all__ = [
     "IMG_SIZE",
     "IOU_THRESHOLD",
     "MAX_LOADED_MODELS",
+    "MAX_IMAGE_SIDE",
+    "ANNOTATED_JPEG_QUALITY",
     "MODEL_INFO",
     "PROJECT_ROOT",
     "WEIGHTS_PATH",

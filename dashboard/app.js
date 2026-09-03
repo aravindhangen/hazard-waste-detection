@@ -238,6 +238,125 @@ function selectedCompareIds() {
   );
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function orderedCompareIds(modelIds) {
+  const unique = [...new Set(modelIds)];
+  return MODEL_DISPLAY_ORDER.filter((id) => unique.includes(id));
+}
+
+function catalogEntry(modelIdValue) {
+  return modelCatalog.find((model) => modelId(model) === modelIdValue);
+}
+
+function predictResponseToCompareItem(data, error = null) {
+  const catalog = catalogEntry(data?.model_id);
+  if (error || !data) {
+    return {
+      model_id: catalog?.id || data?.model_id || "unknown",
+      model_name: catalog?.name || data?.model_name || "Model",
+      role: catalog?.role || "experimental",
+      badge: catalog?.badge,
+      inference_available: catalog?.inference_available ?? false,
+      error,
+      hazard_detected: null,
+      hazard_summary: [],
+      class_counts: [],
+      detections: [],
+      inference_ms: null,
+      benchmark: effectiveBenchmark(catalog || {}),
+    };
+  }
+  return {
+    model_id: data.model_id,
+    model_name: data.model_name,
+    role: catalog?.role || "experimental",
+    badge: catalog?.badge,
+    inference_available: true,
+    error: null,
+    hazard_detected: data.hazard_detected,
+    hazard_summary: data.hazard_summary,
+    class_counts: data.class_counts,
+    detections: data.detections,
+    inference_ms: data.inference_ms,
+    image_width: data.image_width,
+    image_height: data.image_height,
+    annotated_image_base64: data.annotated_image_base64,
+    benchmark: effectiveBenchmark(catalog || {}),
+  };
+}
+
+function inferenceErrorMessage(err, status) {
+  const message = err?.message || String(err);
+  if (status === 502 || status === 503 || /502|503|gateway|timed out/i.test(message)) {
+    return (
+      "Server timed out or is still waking up on Render. " +
+      "Wait until the status pill turns green, try Single Model (YOLOv5s) first, then Compare."
+    );
+  }
+  return message;
+}
+
+async function postPredict(file, modelIdValue, conf) {
+  const formData = new FormData();
+  formData.append("file", file, file.name || "capture.jpg");
+  const res = await fetch(
+    `${API_BASE}/predict?include_annotated_image=true&conf_threshold=${conf}&model_id=${modelIdValue}`,
+    { method: "POST", body: formData }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const detail = err.detail || `Request failed (${res.status})`;
+    throw Object.assign(new Error(detail), { status: res.status });
+  }
+  return res.json();
+}
+
+async function compareModelsSequential(file, modelIds, conf) {
+  const ordered = orderedCompareIds(modelIds);
+  const models = [];
+  let imageWidth = null;
+  let imageHeight = null;
+
+  for (let index = 0; index < ordered.length; index += 1) {
+    const id = ordered[index];
+    const label = cleanModelName(catalogEntry(id) || { id });
+    setLoading(
+      true,
+      IS_RENDER_HOST
+        ? `Cloud compare ${index + 1}/${ordered.length}: ${label} (may take 1–2 min each)…`
+        : `Comparing ${index + 1}/${ordered.length}: ${label}…`
+    );
+    try {
+      const data = await postPredict(file, id, conf);
+      imageWidth = data.image_width;
+      imageHeight = data.image_height;
+      models.push(predictResponseToCompareItem(data));
+    } catch (err) {
+      models.push(predictResponseToCompareItem(null, inferenceErrorMessage(err, err.status)));
+      if (IS_RENDER_HOST && (err.status === 502 || err.status === 503)) {
+        break;
+      }
+    }
+  }
+
+  return { models, image_width: imageWidth, image_height: imageHeight };
+}
+
+async function bootstrapHealth() {
+  if (!IS_RENDER_HOST) {
+    await checkHealth();
+    return;
+  }
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    await checkHealth();
+    if (apiOnline && modelReady) return;
+    await sleep(3000);
+  }
+}
+
 function availableModels() {
   return modelCatalog.filter((model) => model.inference_available);
 }
@@ -346,7 +465,7 @@ async function checkHealth() {
     } else {
       statusLabel.textContent = "API online · models load on demand";
     }
-    els.analyzeUpload.disabled = !apiOnline;
+    els.analyzeUpload.disabled = !apiOnline || (IS_RENDER_HOST && analysisMode === "compare" && !modelReady);
     els.analyzeUpload.title = apiOnline
       ? ""
       : IS_RENDER_HOST
@@ -385,6 +504,7 @@ function setAnalysisMode(mode) {
     els.compareThreeGrid.innerHTML =
       `<div class="placeholder compare-placeholder"><p>Upload an image and click <strong>Compare Models</strong> to see YOLOv5s, YOLO11s, and YOLOv8s side by side.</p></div>`;
   }
+  els.analyzeUpload.disabled = !apiOnline || (IS_RENDER_HOST && mode === "compare" && !modelReady);
 }
 
 function renderSingleResults(data) {
@@ -656,9 +776,13 @@ async function predictImage(file) {
     );
     return;
   }
+  if (IS_RENDER_HOST && analysisMode === "compare" && !modelReady) {
+    alert("Default model is still loading on Render. Wait until the status shows the API is online with models loaded.");
+    return;
+  }
   if (IS_RENDER_HOST && analysisMode === "compare") {
     const proceed = window.confirm(
-      "Cloud compare runs all three models sequentially and may take 3–5 minutes. Continue?"
+      "On Render, each model runs as a separate request (~1–2 min per model on cloud CPU). Continue?"
     );
     if (!proceed) return;
   }
@@ -679,23 +803,29 @@ async function predictImage(file) {
         modelIds.length === MODEL_DISPLAY_ORDER.length
           ? MODEL_DISPLAY_ORDER.join(",")
           : modelIds.join(",");
-      setLoading(
-        true,
-        IS_RENDER_HOST
-          ? "Comparing YOLOv5s, YOLO11s, and YOLOv8s on cloud CPU (3–5 min)…"
-          : "Comparing all three models on the same image…"
-      );
       setCompareInputPreview(file);
-      const res = await fetch(
-        `${API_BASE}/predict/compare?include_annotated_image=true&conf_threshold=${conf}&model_ids=${compareIds}`,
-        { method: "POST", body: formData }
-      );
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Request failed (${res.status})`);
+
+      if (IS_RENDER_HOST) {
+        const data = await compareModelsSequential(file, modelIds, conf);
+        lastCompareModels = data.models;
+        renderCompareResults(data);
+      } else {
+        setLoading(true, "Comparing all three models on the same image…");
+        const res = await fetch(
+          `${API_BASE}/predict/compare?include_annotated_image=true&conf_threshold=${conf}&model_ids=${compareIds}`,
+          { method: "POST", body: formData }
+        );
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw Object.assign(
+            new Error(err.detail || `Request failed (${res.status})`),
+            { status: res.status }
+          );
+        }
+        const data = await res.json();
+        lastCompareModels = data.models || [];
+        renderCompareResults(data);
       }
-      const data = await res.json();
-      renderCompareResults(data);
     } else {
       const selectedModelId = els.modelSelect.value;
       setLoading(
@@ -710,13 +840,16 @@ async function predictImage(file) {
       );
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Request failed (${res.status})`);
+        throw Object.assign(
+          new Error(err.detail || `Request failed (${res.status})`),
+          { status: res.status }
+        );
       }
       const data = await res.json();
       renderSingleResults(data);
     }
   } catch (err) {
-    alert(`Inference failed: ${err.message}`);
+    alert(`Inference failed: ${inferenceErrorMessage(err, err.status)}`);
   } finally {
     isAnalyzing = false;
     setLoading(false);
@@ -857,7 +990,7 @@ setupUpload();
 setupWebcam();
 setupLightbox();
 loadModelCatalog();
-checkHealth();
+bootstrapHealth();
 setInterval(checkHealth, 5000);
 
 function setupLightbox() {

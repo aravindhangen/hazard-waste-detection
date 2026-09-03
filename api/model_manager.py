@@ -153,6 +153,8 @@ class ModelManager:
                 outputs.append((spec, result, None))
             except Exception as exc:
                 outputs.append((spec, None, str(exc)))
+            finally:
+                gc.collect()
         return outputs
 
     @property

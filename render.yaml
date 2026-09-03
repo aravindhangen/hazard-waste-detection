@@ -14,11 +14,17 @@ services:
       - key: HAZARD_DEFAULT_MODEL_ID
         value: yolov5
       - key: HAZARD_EAGER_LOAD
-        value: "false"
+        value: "true"
       - key: HAZARD_BACKGROUND_WARMUP
         value: "false"
       - key: HAZARD_MAX_LOADED_MODELS
         value: "1"
+      - key: HAZARD_IMG_SIZE
+        value: "416"
+      - key: HAZARD_MAX_IMAGE_SIDE
+        value: "1024"
+      - key: HAZARD_ANNOTATED_JPEG_QUALITY
+        value: "75"
       - key: OMP_NUM_THREADS
         value: "1"
       - key: MKL_NUM_THREADS

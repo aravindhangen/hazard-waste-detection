@@ -26,6 +26,7 @@ from api.schemas import (
 )
 from hazard_detection.config import DASHBOARD_DIR
 from hazard_detection.config.api_settings import (
+    ANNOTATED_JPEG_QUALITY,
     BACKGROUND_WARMUP,
     CONF_THRESHOLD,
     DATA_YAML_PATH,
@@ -33,6 +34,7 @@ from hazard_detection.config.api_settings import (
     EAGER_LOAD,
     IMG_SIZE,
     IOU_THRESHOLD,
+    MAX_IMAGE_SIDE,
     MODEL_INFO,
     WEIGHTS_PATH,
 )
@@ -86,7 +88,10 @@ def _model_summary(status) -> ModelSummaryResponse:
 def _build_predict_response(spec, result) -> PredictResponse:
     annotated_base64 = None
     if result.annotated_image is not None:
-        annotated_base64 = encode_image_base64(result.annotated_image)
+        annotated_base64 = encode_image_base64(
+            result.annotated_image,
+            quality=ANNOTATED_JPEG_QUALITY,
+        )
 
     return PredictResponse(
         model_id=spec.id,
@@ -275,7 +280,7 @@ async def predict(
         raise HTTPException(status_code=400, detail="Empty file uploaded.")
 
     try:
-        image_bgr = decode_image(image_bytes)
+        image_bgr = decode_image(image_bytes, max_side=MAX_IMAGE_SIDE)
         spec, result = manager.predict(
             image_bgr,
             model_id=model_id,
@@ -330,7 +335,7 @@ async def predict_compare(
         raise HTTPException(status_code=400, detail="Empty file uploaded.")
 
     try:
-        image_bgr = decode_image(image_bytes)
+        image_bgr = decode_image(image_bytes, max_side=MAX_IMAGE_SIDE)
         outputs = manager.compare(
             image_bgr,
             model_ids=requested_ids,
@@ -354,7 +359,10 @@ async def predict_compare(
             image_height = result.image_height
             annotated_base64 = None
             if include_annotated_image and result.annotated_image is not None:
-                annotated_base64 = encode_image_base64(result.annotated_image)
+                annotated_base64 = encode_image_base64(
+                    result.annotated_image,
+                    quality=ANNOTATED_JPEG_QUALITY,
+                )
             items.append(
                 ModelCompareItem(
                     model_id=spec.id,
