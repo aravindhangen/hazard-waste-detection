@@ -36,10 +36,25 @@ Thumbs.db
 # Stray Ultralytics validation outputs (not part of documented runs)
 runs/segment/
 
-# Datasets (keep data.yaml only; images not needed for Render deploy)
-hazard_dataset/
+# Datasets — images stay local only (not published to GitHub)
+hazard_dataset/images/
 hazard_dataset_clean/images/
 hazard_dataset_clean/labels/
+
+# Demo / QA / report figures (may contain scrap-yard photos)
+demo/*.jpg
+demo/*.png
+demo/*.jpeg
+demo/*.webp
+visual_qa/
+evaluation_reports/*.png
+evaluation_reports/*.jpg
+
+# Training / evaluation plot images (keep JSON/TXT reports)
+runs/**/evaluation/**/*.png
+runs/**/evaluation/**/*.jpg
+runs/**/train/**/*.jpg
+runs/**/train/**/*.png
 
 # Nested vendor git metadata
 yolov9/.git/
@@ -56,5 +71,5 @@ yolov9/runs/predict-seg/
 runs/yolo11s_run2/train/
 runs/yolov8s_run3/train/
 runs/yolov5s_run4/train/
-runs/yolo11s_run2/evaluation/
-runs/yolov8s_run3/evaluation/
+# Legacy YOLOv9 training visuals (may contain dataset photos)
+yolov9/runs/

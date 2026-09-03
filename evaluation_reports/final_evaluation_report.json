@@ -93,8 +93,5 @@
     },
     "inference_ms": 4.4
   },
-  "inference_ms": 43.599999999999994,
-  "artifacts": {
-    "test_confusion_matrix.png": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\evaluation_reports\\test_confusion_matrix.png"
-  }
+  "inference_ms": 43.599999999999994
 }

@@ -1,5 +1,6 @@
 {
-  "description": "Prepared presentation demo images from held-out test set",
+  "description": "Presentation demo image manifest (images are local-only — not committed to GitHub).",
+  "setup": "Copy samples from hazard_dataset_clean/images/test/ — see docs/DEMO_SCRIPT.md",
   "images": [
     {
       "file": "demo/01_clear_cylinder.jpg",

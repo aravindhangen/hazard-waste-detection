@@ -86,8 +86,8 @@ Hazard_Waste_Detection/
 │   ├── training/           # Training & comparison (08–13)
 │   ├── verify_endpoints.py # API smoke tests
 │   └── _common.py          # Shared script bootstrap
-├── hazard_dataset_clean/   # Frozen dataset (393 images)
-├── hazard_dataset/         # Raw merged dataset (512 images)
+├── hazard_dataset_clean/   # Frozen dataset (images local-only — not in Git)
+├── hazard_dataset/         # Raw merged dataset (images local-only — not in Git)
 ├── runs/
 │   ├── yolov5s_run4/       # Run 4 — YOLOv5s (production)
 │   ├── yolo11s_run2/       # Run 2 — YOLO11s
@@ -97,7 +97,7 @@ Hazard_Waste_Detection/
 ├── pretrained/             # Ultralytics base checkpoints
 ├── reports/                # Pipeline logs (dedup report)
 ├── notebooks/              # Jupyter notebooks
-├── demo/                   # Presentation demo images
+├── demo/                   # Demo manifest (copy test images locally)
 ├── docs/                   # Reports, presentation, Docker guide
 ├── run_server.bat          # Windows CMD launcher
 ├── run_server.ps1          # Windows PowerShell launcher
