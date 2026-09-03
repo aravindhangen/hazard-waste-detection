@@ -21,6 +21,24 @@ from api.config import (
 from api.inference import PredictionResult
 from hazard_detection.config.paths import YOLOV5_DIR
 
+_TORCH_LOAD_PATCHED = False
+
+
+def _patch_torch_load_for_yolov5() -> None:
+    """YOLOv5 checkpoints need full pickle load; PyTorch 2.6+ defaults to weights_only=True."""
+    global _TORCH_LOAD_PATCHED
+    if _TORCH_LOAD_PATCHED:
+        return
+
+    original_load = torch.load
+
+    def load_compat(*args, **kwargs):
+        kwargs.setdefault("weights_only", False)
+        return original_load(*args, **kwargs)
+
+    torch.load = load_compat  # type: ignore[method-assign]
+    _TORCH_LOAD_PATCHED = True
+
 
 def _ensure_yolov5_on_path() -> Path:
     root = YOLOV5_DIR
@@ -32,6 +50,7 @@ def _ensure_yolov5_on_path() -> Path:
     root_str = str(root.resolve())
     if root_str not in sys.path:
         sys.path.insert(0, root_str)
+    _patch_torch_load_for_yolov5()
     return root
 
 
