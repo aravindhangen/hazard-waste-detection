@@ -52,7 +52,7 @@ def main() -> int:
                 response = client.post(
                     f"{BASE}/predict",
                     files={"file": ("test.jpg", handle, "image/jpeg")},
-                    params={"include_annotated_image": "false", "model_id": "yolov9"},
+                    params={"include_annotated_image": "false", "model_id": "yolov5"},
                 )
             ok = response.status_code == 200 and response.json().get("hazard_detected") is not None
             status = "OK" if ok else "FAIL"
@@ -66,7 +66,7 @@ def main() -> int:
                     files={"file": ("test.jpg", handle, "image/jpeg")},
                     params={
                         "include_annotated_image": "false",
-                        "model_ids": "yolov9,yolo11s",
+                        "model_ids": "yolov5,yolo11s,yolov8s",
                     },
                 )
             ok = response.status_code == 200 and len(response.json().get("models", [])) >= 2

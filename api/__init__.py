@@ -1,1 +1,1 @@
-"""FastAPI inference service for the frozen YOLOv9 hazard-waste segmentation model."""
+"""FastAPI inference service for the YOLOv5s hazard-waste segmentation model."""

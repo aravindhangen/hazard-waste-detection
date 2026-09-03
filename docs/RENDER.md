@@ -7,29 +7,34 @@ Host the FastAPI app + dashboard on [Render](https://render.com) using the CPU D
 | Item | Notes |
 |------|--------|
 | **GitHub repo** | Push this project (including model weights) to GitHub |
-| **Render plan** | **Standard (2 GB)** with default model `yolov8s` on cloud CPU |
-| **YOLOv9 on Render** | Set `HAZARD_DEFAULT_MODEL_ID=yolov9` and upgrade to **Pro (4 GB)** |
+| **Render plan** | **Standard (2 GB)** — default model `yolov5` on cloud CPU |
 | **Weights in repo** | These must exist at build time (see below) |
 
 ### Required weight files (committed to Git)
 
 ```
-runs/yolov5s_run4/weights/best_yolov5s.pt   # after Run 4 training
+runs/yolov5s_run4/weights/best_yolov5s.pt
 runs/yolo11s_run2/weights/best_yolo11s.pt
 runs/yolov8s_run3/weights/best_yolov8s.pt
 runs/comparison/all_runs_comparison.json
 ```
 
+Optional (for dashboard benchmark details):
+
+```
+runs/yolov5s_run4/evaluation/run4_evaluation_report.json
+```
+
 ```bash
 git lfs install
-git lfs track "yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt"
+git lfs track "runs/yolov5s_run4/weights/best_yolov5s.pt"
 git add .gitattributes
-git add yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+git add runs/yolov5s_run4/weights/best_yolov5s.pt
 ```
 
 Or host weights on cloud storage and download them in a custom build step.
 
-> **Standard (2 GB)** runs **YOLOv8s** by default on Render. **YOLOv9** needs **Pro (4 GB)** — set `HAZARD_DEFAULT_MODEL_ID=yolov9`.
+> **Standard (2 GB)** runs **YOLOv5s** by default on Render (`HAZARD_DEFAULT_MODEL_ID=yolov5` in `render.yaml`).
 
 ---
 
@@ -56,6 +61,7 @@ Or host weights on cloud storage and download them in a custom build step.
    | Key | Value |
    |-----|--------|
    | `HAZARD_DEVICE` | `cpu` |
+   | `HAZARD_DEFAULT_MODEL_ID` | `yolov5` |
    | `KMP_DUPLICATE_LIB_OK` | `TRUE` |
    | `PYTHONPATH` | `/app` |
 
@@ -79,6 +85,7 @@ Or host weights on cloud storage and download them in a custom build step.
 - Render sets `PORT` automatically; `scripts/render_start.sh` binds uvicorn to it.
 - **No GPU** on Render standard web services — `HAZARD_DEVICE=cpu` is required.
 - Free tier spins down after inactivity; first request after sleep has a long cold start.
+- The Docker image clones `ultralytics/yolov5` at build time for Run 4 inference.
 
 ---
 
@@ -86,11 +93,12 @@ Or host weights on cloud storage and download them in a custom build step.
 
 | Issue | Fix |
 |-------|-----|
-| Build fails: weight file not found | Ensure `best.pt` paths exist in the repo before deploy |
-| OOM / crash on startup | Upgrade to Standard (2 GB) or higher |
+| Build fails: weight file not found | Ensure `best_yolov5s.pt` and comparison weights exist in the repo |
+| OOM / crash on startup | Upgrade to Standard (2 GB) or higher; keep `HAZARD_MAX_LOADED_MODELS=1` |
 | Health check fails | Allow 3+ minutes on first boot (model load); increase start period in Render settings |
 | 502 after idle | Free tier waking up — retry after 30–60 s |
 | Compare models missing | Rebuild after adding Run 2/3 weights to the repo |
+| Wrong default model | Set `HAZARD_DEFAULT_MODEL_ID=yolov5` in Render env vars |
 
 ---
 

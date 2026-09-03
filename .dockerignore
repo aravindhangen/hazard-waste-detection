@@ -13,10 +13,10 @@ hazard_dataset_clean/images/
 hazard_dataset_clean/labels/
 
 # Training outputs not needed at runtime (weights copied explicitly)
-yolov9/runs/train-seg/**/*
-!yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
-yolov9/runs/val-seg/
-yolov9/runs/predict-seg/
+runs/yolov5s_run4/train/
+runs/yolo11s_run2/train/
+runs/yolov8s_run3/train/
+yolov9/
 
 # Reports and notebooks (comparison JSON copied explicitly in Dockerfile)
 evaluation_reports/

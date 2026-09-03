@@ -1,29 +1,23 @@
-Hazard Waste Detection — Run 1 vs Run 2 Comparison
-Generated: 2026-08-28T20:58:27
+Hazard Waste Detection — Legacy Run 1 vs Run 2 Comparison (ARCHIVED)
+Generated: 2026-08-28T23:02:14
 
-Comparison priority: Cylinder Recall > mAP@50 > mAP@50:95 > FPS
-Meaningful delta threshold: 0.03 on 39-image test set
+NOTE: Production model is now Run 4 (YOLOv5s). See runs/comparison/all_runs_comparison.txt.
 
 Metric                 Run 1 (YOLOv9)  Run 2 (YOLO11s)        Delta
---------------------------------------------------------------------
-Cylinder Recall                 0.734            0.714 -0.020 (within noise on 39-image test)
-Test Recall                     0.722            0.648       -0.074
-Test Precision                  0.743            0.702       -0.041
-Test F1                         0.732            0.674       -0.058
-Test mAP@50                     0.732            0.643       -0.089
-Test mAP@50:95                  0.510            0.444       -0.066
-FPS (approx)                   22.936           26.554             
+----------------------------------------------------------------------
+Cylinder Recall              0.734           0.714        -0.020
+Overall mAP@50               0.732           0.643        -0.089
+Overall mAP@50:95            0.510           0.444        -0.066
+Overall Recall               0.722           0.648        -0.074
+FPS (approx)                  22.9            26.6         +3.7
 
 Weights
-  Run 1: yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
-  Run 2: C:\Users\Aravindhan\Downloads\Hazard_Waste_Detection\runs\yolo11s_run2\weights\best_yolo11s.pt
+  Run 1 (archived): yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+  Run 2: runs/yolo11s_run2/weights/best_yolo11s.pt
 
-Recommendation
+Historical recommendation (superseded):
   Keep Run 1 (YOLOv9) as production model.
-  - Cylinder recall decreased (0.734 -> 0.714). Safety priority favors keeping Run 1.
+  - Cylinder recall decreased (0.734 -> 0.714). Safety priority favored Run 1.
 
-Untouched official artifacts
-  hazard_dataset_clean/
-  evaluation_reports/final_evaluation_report.txt
-  yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
-  FastAPI + dashboard deployment
+Current production:
+  runs/yolov5s_run4/weights/best_yolov5s.pt

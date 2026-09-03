@@ -298,7 +298,7 @@ async def predict(
 async def predict_compare(
     file: UploadFile = File(..., description="Scrap-yard image (jpg/png/webp)."),
     model_ids: str = Query(
-        default="yolov9,yolo11s,yolov8s",
+        default="yolov5,yolo11s,yolov8s",
         description="Comma-separated model ids to compare on the same image.",
     ),
     conf_threshold: float | None = Query(

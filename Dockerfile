@@ -6,25 +6,30 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     KMP_DUPLICATE_LIB_OK=TRUE \
     HAZARD_DEVICE=0 \
+    HAZARD_DEFAULT_MODEL_ID=yolov5 \
     PORT=8000 \
     PYTHONPATH=/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     libgl1 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt requirements-train.txt requirements-api.txt ./
-RUN pip install --no-cache-dir -r requirements-api.txt
+COPY requirements.txt requirements-train.txt requirements-api.txt requirements-run2.txt ./
+RUN pip install --no-cache-dir -r requirements-api.txt -r requirements-run2.txt
+
+RUN git clone --depth 1 --branch v7.0 https://github.com/ultralytics/yolov5.git /app/yolov5
 
 COPY hazard_detection/ ./hazard_detection/
 COPY api/ ./api/
 COPY dashboard/ ./dashboard/
 COPY scripts/render_start.sh ./scripts/render_start.sh
 COPY hazard_dataset_clean/data.yaml ./hazard_dataset_clean/data.yaml
-COPY yolov9/ ./yolov9/
-COPY yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt \
-    ./yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
+COPY runs/yolov5s_run4/weights/best_yolov5s.pt \
+    ./runs/yolov5s_run4/weights/best_yolov5s.pt
+COPY runs/yolov5s_run4/evaluation/run4_evaluation_report.json \
+    ./runs/yolov5s_run4/evaluation/run4_evaluation_report.json
 COPY runs/yolo11s_run2/weights/best_yolo11s.pt \
     ./runs/yolo11s_run2/weights/best_yolo11s.pt
 COPY runs/yolov8s_run3/weights/best_yolov8s.pt \

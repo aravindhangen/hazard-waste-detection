@@ -1,11 +1,12 @@
-Ultralytics pretrained segmentation checkpoints used as training starting points.
+Pretrained Ultralytics base checkpoints used as training starting points.
 
-  yolo11s-seg.pt  — Run 2 (YOLO11s) base weights
-  yolov8s-seg.pt  — Run 3 (YOLOv8s) base weights
+  yolo11s-seg.pt   — Run 2 (YOLO11s)
+  yolov8s-seg.pt   — Run 3 (YOLOv8s)
+  yolov5s-seg.pt   — Run 4 (YOLOv5s)
 
-Fine-tuned project weights live under:
+Production weights (after training):
+  runs/yolov5s_run4/weights/best_yolov5s.pt
+
+Comparison weights:
   runs/yolo11s_run2/weights/best_yolo11s.pt
   runs/yolov8s_run3/weights/best_yolov8s.pt
-
-Production weights (Run 1):
-  yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt

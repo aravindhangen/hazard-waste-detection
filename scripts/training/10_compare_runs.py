@@ -1,10 +1,10 @@
 """
-Compare Run 1 (YOLOv9 official baseline) vs Run 2 (YOLO11s experimental).
+Legacy comparison: Run 1 (YOLOv9, archived) vs Run 2 (YOLO11s).
+
+Superseded by scripts/training/12_compare_all_runs.py (Run 4 / 2 / 3).
 
 Priority for production recommendation:
   Cylinder Recall > Overall mAP@50 > Shock Absorber mAP@50:95 > FPS
-
-Does not modify any Run 1 artifacts.
 """
 from __future__ import annotations
 

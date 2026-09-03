@@ -32,8 +32,10 @@ docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
 
 | Component | Included |
 |-----------|----------|
-| YOLOv9 production weights (`best.pt`) | Yes |
+| YOLOv5s production weights (`best_yolov5s.pt`) | Yes |
 | YOLO11s comparison weights | Yes (if present at build time) |
+| YOLOv8s comparison weights | Yes (if present at build time) |
+| YOLOv5 repo (cloned at build) | Yes |
 | FastAPI + dashboard | Yes |
 | Full dataset images | No (only `data.yaml` for class names) |
 | Training scripts | No |
@@ -45,8 +47,9 @@ docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
 | Variable | Default (CPU compose) | Description |
 |----------|----------------------|-------------|
 | `HAZARD_DEVICE` | `cpu` | `cpu` or CUDA device index `0` |
+| `HAZARD_DEFAULT_MODEL_ID` | `yolov5` | Default model in `/predict` |
 | `PORT` | `8000` | API port |
-| `HAZARD_MODEL_WEIGHTS` | Run 1 `best.pt` | Override production weights |
+| `HAZARD_MODEL_WEIGHTS` | Run 4 `best_yolov5s.pt` | Override production weights |
 | `KMP_DUPLICATE_LIB_OK` | `TRUE` | OpenMP workaround |
 
 ---
@@ -63,8 +66,8 @@ curl http://localhost:8000/models
 ## Build notes
 
 - Base image: `pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime` (runs on CPU when `HAZARD_DEVICE=cpu`)
-- First startup loads YOLOv9 (~30–90 s depending on hardware)
-- Image size ~3–4 GB with weights
+- First startup loads YOLOv5s (~30–90 s depending on hardware)
+- Image size ~2–3 GB with weights
 
 ---
 
@@ -74,13 +77,12 @@ curl http://localhost:8000/models
 |-------|-----|
 | Port 8000 in use | Change `ports: "8080:8000"` in compose file |
 | GPU not detected | Use CPU compose or install NVIDIA Container Toolkit |
-| Model compare missing YOLO11s | Rebuild after ensuring `runs/yolo11s_run2/weights/best_yolo11s.pt` exists |
+| Model compare missing a model | Rebuild after ensuring all weight files exist under `runs/` |
 | Slow inference on CPU | Expected; mention training was on RTX 4050, deployment can be CPU |
 
 ---
 
-## Production vs experimental in Docker
+## Production vs comparison in Docker
 
-- **Default `/predict`** always uses YOLOv9 unless `model_id` is specified
-- **Compare mode** in dashboard uses `/predict/compare` for YOLOv9 + YOLO11s demo only
-- YOLOv8s remains unavailable until Run 3 weights are added
+- **Default `/predict`** uses YOLOv5s unless `model_id` is specified
+- **Compare mode** in dashboard uses `/predict/compare` for YOLOv5s + YOLO11s + YOLOv8s

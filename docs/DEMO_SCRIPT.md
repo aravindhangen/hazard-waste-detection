@@ -40,7 +40,7 @@ Copy-Item "hazard_dataset_clean\images\test\scrap_Screenshot-2025-02-09-215322_p
 
 ### 2. Upload — Clear cylinder (60 s)
 
-- Mode: **Single Model** → YOLOv9
+- Mode: **Single Model** → YOLOv5s
 - Upload `01_clear_cylinder.jpg`
 - Point out: mask overlay, confidence score, **EXPLOSIVE** hazard badge
 
@@ -52,20 +52,20 @@ Copy-Item "hazard_dataset_clean\images\test\scrap_Screenshot-2025-02-09-215322_p
 ### 4. Compare Models (90 s)
 
 - Switch to **Compare Models**
-- Ensure YOLOv9 + YOLO11s checked
+- Ensure all three models checked (YOLOv5s, YOLO11s, YOLOv8s)
 - Upload same image again
 - Explain: same image, same threshold, different model outputs
-- Reference benchmark table: YOLOv9 higher mAP@50 and Cylinder recall
+- Reference benchmark table: YOLOv8s highest mAP@50; YOLOv5s production default
 
 ### 5. Benchmark table (45 s)
 
 | Model | Status | mAP@50 | Cylinder Recall | FPS |
 |-------|--------|-------:|----------------:|----:|
-| YOLOv9 | Production | 0.732 | 0.734 | 22.9 |
+| YOLOv5s | Production | 0.589 | 0.710 | 63.3 |
 | YOLO11s | Tested | 0.643 | 0.714 | 26.6 |
-| YOLOv8s | Candidate | — | — | — |
+| YOLOv8s | Tested | 0.656 | 0.720 | 68.7 |
 
-> "YOLOv8s is a considered baseline but was not trained — no metrics shown."
+> "All three models were trained on the same frozen split and evaluated on the same 39-image test set."
 
 ### 6. Webcam (optional, 60 s)
 
@@ -74,21 +74,21 @@ Copy-Item "hazard_dataset_clean\images\test\scrap_Screenshot-2025-02-09-215322_p
 
 ### 7. Architecture (30 s)
 
-- Production: Dashboard → FastAPI → YOLOv9 only
-- Experimental: comparison runs through model manager for demo purposes
+- Production: Dashboard → FastAPI → YOLOv5s
+- Comparison: model manager loads YOLOv5s, YOLO11s, and YOLOv8s on demand
 
 ---
 
 ## Talking points if asked
 
-**Why YOLOv9 over YOLO11s?**  
-Higher cylinder recall (0.734 vs 0.714) and mAP@50 (0.732 vs 0.643). Speed difference (~4 FPS) is not worth the recall drop for safety-critical detection.
+**Why YOLOv5s over YOLOv8s?**  
+YOLOv8s has higher test mAP@50 (0.656 vs 0.589) and Cylinder recall (0.720 vs 0.710). YOLOv5s was chosen as the production model for its academic baseline role, smaller weights, and efficient cloud CPU deployment.
 
-**Why not YOLOv8?**  
-Considered but not experimentally trained. Two-model comparison was sufficient to justify YOLOv9.
+**Why not YOLO11s?**  
+YOLO11s is included in the comparison dashboard. YOLOv5s is faster on GPU and serves as the standard baseline for the coursework comparison.
 
 **Is this production-ready?**  
-Academic prototype. Human oversight still required — 26% cylinder miss rate on test set.
+Academic prototype. Human oversight still required — ~29% cylinder miss rate on test set for YOLOv5s.
 
 **Dataset size?**  
 393 unique images after dedup. Test set is only 39 images — metrics have uncertainty.

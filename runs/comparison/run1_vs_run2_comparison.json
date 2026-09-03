@@ -1,5 +1,12 @@
 {
   "generated": "2026-08-28T20:58:27",
+  "status": "archived",
+  "note": "Legacy Run 1 vs Run 2 comparison. Production model is now Run 4 (YOLOv5s). See all_runs_comparison.json.",
+  "current_production": {
+    "run_id": "run4",
+    "model": "YOLOv5s-Seg",
+    "weights": "runs/yolov5s_run4/weights/best_yolov5s.pt"
+  },
   "priority": [
     "cylinder_recall",
     "map50",
@@ -8,7 +15,7 @@
   ],
   "meaningful_delta": 0.03,
   "run1": {
-    "name": "Run 1 (official)",
+    "name": "Run 1 (archived)",
     "model": "YOLOv9 GELAN-C-SEG",
     "cylinder_recall": 0.734,
     "map50": 0.732,
@@ -29,10 +36,10 @@
     "recall": 0.6484470178681907,
     "precision": 0.7022450382904334,
     "fps": 26.553665917293603,
-    "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolo11s_run2\\weights\\best_yolo11s.pt"
+    "weights": "runs/yolo11s_run2/weights/best_yolo11s.pt"
   },
-  "recommendation": "Keep Run 1 (YOLOv9) as production model.",
+  "recommendation": "Superseded by Run 4 (YOLOv5s) production deployment.",
   "reasons": [
-    "Cylinder recall decreased (0.734 -> 0.714). Safety priority favors keeping Run 1."
+    "Historical comparison only. Use scripts/training/12_compare_all_runs.py for current metrics."
   ]
 }

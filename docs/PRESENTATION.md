@@ -6,7 +6,7 @@
 
 **Hazardous Waste Detection in Scrap Yards**
 
-Instance Segmentation with YOLOv9 GELAN-C-SEG
+Instance Segmentation with YOLOv5s-Seg
 
 *Your Name · Institution · Date*
 
@@ -33,12 +33,12 @@ Instance Segmentation with YOLOv9 GELAN-C-SEG
 ## Slide 4 — Proposed Solution
 
 ```text
-Camera / Upload → Dashboard → FastAPI → YOLOv9-Seg → Masks → Hazard Alert
+Camera / Upload → Dashboard → FastAPI → YOLOv5s-Seg → Masks → Hazard Alert
 ```
 
 - **Instance segmentation** (not just bounding boxes)
 - Two classes: **Cylinder** (explosive), **Shock Absorber** (toxic)
-- Real-time inference on consumer GPU (~23 FPS)
+- Real-time inference on consumer GPU (~63 FPS for YOLOv5s)
 
 ---
 
@@ -68,39 +68,39 @@ Camera / Upload → Dashboard → FastAPI → YOLOv9-Seg → Masks → Hazard Al
 
 ## Slide 7 — Model Selection
 
-**Considered (theoretical):** Mask R-CNN, YOLOv5-Seg, RT-DETR
+**Considered (theoretical):** Mask R-CNN, RT-DETR
 
 **Experimentally benchmarked (same frozen test set):**
 
-- YOLOv8s-Seg (Run 3)
-- YOLOv9 GELAN-C-SEG (Run 1)
+- YOLOv5s-Seg (Run 4) — **production**
 - YOLO11s-Seg (Run 2)
+- YOLOv8s-Seg (Run 3)
 
-Selection based on **held-out test set** and safety-oriented criteria, not model novelty.
+Selection based on **held-out test set**, deployment constraints, and safety-oriented criteria.
 
 ---
 
 ## Slide 8 — Experimental Model Comparison
 
-> **YOLOv9 achieved the best safety-oriented detection performance.**
+> **YOLOv8s achieved the highest test accuracy; YOLOv5s was selected for production deployment.**
 
-| Model | mAP@50 | Cylinder Recall | FPS |
-|-------|-------:|----------------:|----:|
-| YOLOv8s | 65.6% | 72.0% | **68.7** |
-| **YOLOv9** | **73.2%** | **73.4%** | 22.9 **🏆** |
-| YOLO11s | 64.3% | 71.4% | 26.6 |
+| Model | mAP@50 | Cylinder Recall | FPS | Role |
+|-------|-------:|----------------:|----:|------|
+| **YOLOv5s** | 58.9% | 71.0% | **63.3** | **Production** |
+| YOLO11s | 64.3% | 71.4% | 26.6 | Tested |
+| YOLOv8s | **65.6%** | **72.0%** | 68.7 | Tested |
 
-**Selection priority:** Cylinder Recall → mAP@50 → Recall → Speed
+**Selection priority:** Cylinder Recall → mAP@50 → Recall → Deployability
 
-Although YOLOv8s exceeded the 30 FPS design target, YOLOv9 was selected because hazardous-cylinder detection reliability is the primary requirement.
+YOLOv5s provides a standard academic baseline with compact weights and strong cloud CPU performance.
 
 ---
 
 ## Slide 9 — System Architecture
 
-**Production path:** Dashboard → FastAPI → YOLOv9 `best.pt` → Hazard Alert
+**Production path:** Dashboard → FastAPI → YOLOv5s `best_yolov5s.pt` → Hazard Alert
 
-**Experimental path:** Same frozen test set → YOLOv8s vs YOLOv9 vs YOLO11s → Benchmark comparison
+**Comparison path:** Same frozen test set → YOLOv5s vs YOLO11s vs YOLOv8s → Benchmark table
 
 *(Use architecture diagram from `docs/FINAL_REPORT.md` Section 7)*
 
@@ -111,7 +111,7 @@ Although YOLOv8s exceeded the 30 FPS design target, YOLOv9 was selected because 
 **Demo flow:**
 
 1. Upload prepared test image
-2. YOLOv9 detection + segmentation masks
+2. YOLOv5s detection + segmentation masks
 3. Confidence scores + hazard classification
 4. Switch to **Compare Models** → all three models side-by-side
 5. Show benchmark table
@@ -122,9 +122,9 @@ Although YOLOv8s exceeded the 30 FPS design target, YOLOv9 was selected because 
 
 ## Slide 11 — Limitations & Future Work
 
-- Measured YOLOv9 FPS ~22.9 (below 30 FPS design target; YOLOv8s reached 68.7 FPS)
+- YOLOv5s Cylinder recall 71.0% — human oversight still required
 - Dataset domain-specific (scrap-yard screenshots)
-- Future: more data, edge deployment with speed-optimized models where appropriate
+- Future: more data, optional YOLOv8s for accuracy-critical edge deployments
 
 ---
 
@@ -132,8 +132,8 @@ Although YOLOv8s exceeded the 30 FPS design target, YOLOv9 was selected because 
 
 - Built end-to-end hazardous-waste detection prototype
 - **393-image frozen dataset** with rigorous QA
-- **YOLOv9 selected** after three-model experimental comparison (YOLOv8s, YOLOv9, YOLO11s)
+- **YOLOv5s deployed** with YOLO11s and YOLOv8s for academic comparison
 - Deployed API + dashboard with live inference and model comparison
-- Ready for Docker deployment and academic evaluation
+- Ready for Docker / Render deployment and academic evaluation
 
-**Production model:** YOLOv9 GELAN-C-SEG · mAP@50 **0.732** · Cylinder recall **0.734**
+**Production model:** YOLOv5s-Seg · mAP@50 **0.589** · Cylinder recall **0.710**

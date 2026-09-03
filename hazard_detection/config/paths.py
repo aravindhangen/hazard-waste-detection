@@ -35,7 +35,7 @@ CLEAN_LABEL_DIR = CLEAN_DATASET_ROOT / "labels"
 CLEAN_DATA_YAML = CLEAN_DATASET_ROOT / "data.yaml"
 
 # ---------------------------------------------------------------------------
-# YOLOv9 (Run 1 — production)
+# YOLOv9 (Run 1 — legacy, archived)
 # ---------------------------------------------------------------------------
 YOLOV9_DIR = PROJECT_ROOT / "yolov9"
 RUN1_WEIGHTS = (

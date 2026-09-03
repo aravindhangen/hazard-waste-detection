@@ -1,10 +1,10 @@
 """
-Run 3 — YOLOv8s-Seg experimental baseline (does NOT modify Run 1 artifacts).
+Run 3 — YOLOv8s-Seg experimental baseline (does NOT modify Run 4 artifacts).
 
 Trains YOLOv8s-seg on the frozen hazard_dataset_clean split, evaluates on the
 held-out test set, and writes reports under runs/yolov8s_run3/ only.
 
-Run 1 remains official production model.
+Run 4 (YOLOv5s) remains the production model.
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ from hazard_detection.config import (
     CLASS_NAMES,
     CLEAN_DATASET_ROOT,
     CLEAN_DATA_YAML,
-    RUN1_REPORT_JSON,
+    RUN4_REPORT_JSON,
     RUN3_DIR,
     RUN3_PRETRAINED,
     PRETRAINED_DIR,
@@ -43,7 +43,7 @@ RUN3_EVAL_DIR = RUN3_ROOT / "evaluation"
 BEST_RUN3_NAME = "best_yolov8s.pt"
 PRETRAINED = str(RUN3_PRETRAINED) if RUN3_PRETRAINED.exists() else str(PRETRAINED_DIR / "yolov8s-seg.pt")
 
-RUN1_REPORT = RUN1_REPORT_JSON
+RUN4_REPORT = RUN4_REPORT_JSON
 
 
 @dataclass
@@ -222,7 +222,7 @@ def write_run3_report(
         "Hazard Waste Detection - Run 3 YOLOv8s-Seg Evaluation Report",
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
-        "NOTE: Experimental baseline only. Run 1 (YOLOv9) remains the official production model.",
+        "NOTE: Experimental baseline only. Run 4 (YOLOv5s) is the production model.",
         "",
         "Environment",
         f"  PyTorch: {gpu_info['torch_version']}",
@@ -279,8 +279,8 @@ def write_run3_report(
             f"  Average inference time: {infer_ms:.2f} ms" if infer_ms else "  Average inference time: N/A",
             f"  Approximate FPS: {fps:.2f}" if infer_ms else "  Approximate FPS: N/A",
             "",
-            "Official Run 1 report (unchanged):",
-            f"  {RUN1_REPORT}",
+            "Production Run 4 report:",
+            f"  {RUN4_REPORT}",
         ]
     )
 
@@ -293,7 +293,7 @@ def write_run3_report(
         "test": asdict(test_metrics),
         "inference_ms": infer_ms,
         "training": {"epochs": epochs, "batch_size": batch_size, "img_size": img_size},
-        "official_run1_report": str(RUN1_REPORT),
+        "official_run4_report": str(RUN4_REPORT),
     }
     report_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     report_txt.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -302,7 +302,7 @@ def write_run3_report(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run 3 YOLOv8s-Seg training/evaluation (experimental; does not touch Run 1)."
+        description="Run 3 YOLOv8s-Seg training/evaluation (experimental; does not touch Run 4)."
     )
     parser.add_argument("--device", default="", help="CUDA device id or 'cpu'")
     parser.add_argument("--epochs", type=int, default=100)
@@ -323,8 +323,8 @@ def main() -> None:
     print("=" * 70)
     print("RUN 3 — YOLOv8s-SEG (EXPERIMENTAL BASELINE)")
     print("=" * 70)
-    print("\nRun 1 production artifacts are NOT modified.")
-    print(f"  Official weights: yolov9/.../best.pt")
+    print("\nRun 4 production artifacts are NOT modified.")
+    print("  Official weights: runs/yolov5s_run4/weights/best_yolov5s.pt")
     print(f"\nRun 3 output root: {RUN3_ROOT}")
 
     if not DATA_YAML.exists():

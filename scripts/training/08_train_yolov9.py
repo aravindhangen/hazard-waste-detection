@@ -1,9 +1,7 @@
 """
-YOLOv9 segmentation training and evaluation pipeline.
+Legacy YOLOv9 segmentation training pipeline (Run 1 — archived).
 
-Checks GPU/dataset, trains GELAN-C-SEG on hazard_dataset_clean, validates,
-evaluates the untouched test split, benchmarks inference speed, and writes
-evaluation_reports/final_evaluation_report.txt
+Superseded by scripts/training/13_train_yolov5_run4.py for production training.
 """
 from __future__ import annotations
 

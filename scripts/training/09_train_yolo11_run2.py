@@ -1,12 +1,11 @@
 """
-Run 2 — YOLO11s-Seg experimental challenger (does NOT modify Run 1 artifacts).
+Run 2 — YOLO11s-Seg experimental challenger (does NOT modify Run 4 artifacts).
 
 Trains YOLO11s-seg on the frozen hazard_dataset_clean split, evaluates on the
 held-out test set, and writes reports under runs/yolo11s_run2/ only.
 
-Run 1 remains official:
-  - yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt
-  - evaluation_reports/final_evaluation_report.txt
+Run 4 (YOLOv5s) remains the production model:
+  - runs/yolov5s_run4/weights/best_yolov5s.pt
   - FastAPI / dashboard deployment
 """
 from __future__ import annotations
@@ -33,7 +32,7 @@ os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 from hazard_detection.config import (
     CLASS_NAMES,
     CLEAN_DATA_YAML,
-    RUN1_REPORT_JSON,
+    RUN4_REPORT_JSON,
     RUN2_DIR,
     RUN2_PRETRAINED,
     SPLITS,
@@ -47,7 +46,7 @@ RUN2_EVAL_DIR = RUN2_ROOT / "evaluation"
 BEST_RUN2_NAME = "best_yolo11s.pt"
 PRETRAINED = str(RUN2_PRETRAINED)
 
-RUN1_REPORT = RUN1_REPORT_JSON
+RUN4_REPORT = RUN4_REPORT_JSON
 
 
 @dataclass
@@ -226,7 +225,7 @@ def write_run2_report(
         "Hazard Waste Detection - Run 2 YOLO11s-Seg Evaluation Report",
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
-        "NOTE: Experimental challenger only. Run 1 (YOLOv9) remains the official baseline.",
+        "NOTE: Experimental challenger only. Run 4 (YOLOv5s) is the production model.",
         "",
         "Environment",
         f"  PyTorch: {gpu_info['torch_version']}",
@@ -283,8 +282,8 @@ def write_run2_report(
             f"  Average inference time: {infer_ms:.2f} ms" if infer_ms else "  Average inference time: N/A",
             f"  Approximate FPS: {fps:.2f}" if infer_ms else "  Approximate FPS: N/A",
             "",
-            "Official Run 1 report (unchanged):",
-            f"  {RUN1_REPORT}",
+            "Production Run 4 report:",
+            f"  {RUN4_REPORT}",
         ]
     )
 
@@ -297,7 +296,7 @@ def write_run2_report(
         "test": asdict(test_metrics),
         "inference_ms": infer_ms,
         "training": {"epochs": epochs, "batch_size": batch_size, "img_size": img_size},
-        "official_run1_report": str(RUN1_REPORT),
+        "official_run4_report": str(RUN4_REPORT),
     }
     report_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     report_txt.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -306,7 +305,7 @@ def write_run2_report(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run 2 YOLO11s-Seg training/evaluation (experimental; does not touch Run 1)."
+        description="Run 2 YOLO11s-Seg training/evaluation (experimental; does not touch Run 4)."
     )
     parser.add_argument("--device", default="", help="CUDA device id or 'cpu'")
     parser.add_argument("--epochs", type=int, default=100)
@@ -332,9 +331,9 @@ def main() -> None:
     print("=" * 70)
     print("RUN 2 — YOLO11s-SEG (EXPERIMENTAL CHALLENGER)")
     print("=" * 70)
-    print("\nRun 1 artifacts are NOT modified.")
-    print(f"  Official weights: yolov9/.../best.pt")
-    print(f"  Official report:  {RUN1_REPORT.parent / 'final_evaluation_report.txt'}")
+    print("\nRun 4 production artifacts are NOT modified.")
+    print("  Official weights: runs/yolov5s_run4/weights/best_yolov5s.pt")
+    print(f"  Official report:  {RUN4_REPORT}")
     print(f"\nRun 2 output root: {RUN2_ROOT}")
 
     if not DATA_YAML.exists():

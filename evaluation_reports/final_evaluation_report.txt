@@ -1,3 +1,6 @@
+ARCHIVED — Legacy Run 1 (YOLOv9). Production model is Run 4 (YOLOv5s).
+See runs/yolov5s_run4/evaluation/run4_evaluation_report.json
+
 Hazard Waste Detection - YOLOv9 Segmentation Evaluation Report
 Generated: 2026-08-28T18:17:53
 

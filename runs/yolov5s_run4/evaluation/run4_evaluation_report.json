@@ -6,7 +6,7 @@
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 4050 Laptop GPU"
   },
-  "weights": "C:\\Users\\Aravindhan\\Downloads\\Hazard_Waste_Detection\\runs\\yolov5s_run4\\weights\\best_yolov5s.pt",
+  "weights": "runs/yolov5s_run4/weights/best_yolov5s.pt",
   "validation": {
     "split": "val",
     "precision_mask": 0.72,

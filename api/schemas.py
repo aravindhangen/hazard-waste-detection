@@ -28,8 +28,8 @@ class ClassCount(BaseModel):
 
 
 class PredictResponse(BaseModel):
-    model_id: str = "yolov9"
-    model_name: str = "YOLOv9 GELAN-C-SEG"
+    model_id: str = "yolov5"
+    model_name: str = "YOLOv5s-Seg"
     hazard_detected: bool
     hazard_summary: list[str]
     class_counts: list[ClassCount]

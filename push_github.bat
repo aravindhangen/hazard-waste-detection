@@ -4,7 +4,7 @@ cd /d "%~dp0"
 
 echo === Hazard Waste Detection - GitHub Push ===
 echo Remote: https://github.com/aravindhangen/hazard-waste-detection.git
-echo Branch: main (3 commits, includes YOLOv9 best.pt via Git LFS)
+echo Branch: main (includes YOLOv5 Run 4 weights)
 echo.
 echo When Git asks for credentials:
 echo   Username: your GitHub username
@@ -17,7 +17,7 @@ git branch -M main
 git remote set-url origin https://github.com/aravindhangen/hazard-waste-detection.git
 
 echo.
-echo Pushing to GitHub (Git LFS uploads best.pt ~212 MB - may take 5-15 minutes)...
+echo Pushing to GitHub (model weights ~15-50 MB each)...
 git push -u origin main
 
 if errorlevel 1 (

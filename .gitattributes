@@ -1,2 +1,2 @@
-# Git LFS — required for YOLOv9 production weights (>100 MB GitHub limit)
-yolov9/runs/train-seg/hazard_waste_seg/weights/best.pt filter=lfs diff=lfs merge=lfs -text
+# Git LFS — optional for large model weights
+runs/yolov5s_run4/weights/best_yolov5s.pt filter=lfs diff=lfs merge=lfs -text

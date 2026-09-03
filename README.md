@@ -2,7 +2,7 @@
 
 Instance segmentation for **Cylinders** and **Shock Absorbers** in scrap-yard imagery.
 
-**Production model:** YOLOv5s-Seg (Run 4 — train first)  
+**Production model:** YOLOv5s-Seg (Run 4)  
 `runs/yolov5s_run4/weights/best_yolov5s.pt`
 
 **Comparison models:** YOLO11s (Run 2), YOLOv8s (Run 3)
@@ -126,6 +126,7 @@ Run from the project root with `PYTHONPATH` set (launchers do this automatically
 | `python scripts/pipeline/00_build_dataset.py` | Merge Roboflow exports |
 | `python scripts/pipeline/05_deduplicate_and_resplit.py` | Dedup → `hazard_dataset_clean/` |
 | `python scripts/training/13_train_yolov5_run4.py` | Run 4 — YOLOv5s (production) |
+| `python scripts/training/08_train_yolov9.py` | Legacy Run 1 — YOLOv9 (archived) |
 | `python scripts/training/09_train_yolo11_run2.py` | Run 2 — YOLO11s |
 | `python scripts/training/11_train_yolov8_run3.py` | Run 3 — YOLOv8s |
 | `python scripts/training/12_compare_all_runs.py` | 3-model comparison |
@@ -135,9 +136,9 @@ Run from the project root with `PYTHONPATH` set (launchers do this automatically
 
 | Model | mAP@50 | Cylinder Recall | FPS | Role |
 |-------|--------|-----------------|-----|------|
-| YOLOv5s-Seg | Train Run 4 | — | — | **Production** |
+| YOLOv5s-Seg | 0.589 | 0.710 | 63.3 | **Production** |
 | YOLO11s-Seg | 0.643 | 0.714 | 26.6 | Tested |
-| YOLOv8s-Seg | 0.656 | 0.720 | 68.7 | Tested (fastest) |
+| YOLOv8s-Seg | 0.656 | 0.720 | 68.7 | Tested (best accuracy) |
 
 ## Dashboard
 
@@ -151,7 +152,8 @@ Canonical paths: `hazard_detection/config/paths.py`
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HAZARD_MODEL_WEIGHTS` | Run 1 `best.pt` | Inference weights |
+| `HAZARD_MODEL_WEIGHTS` | Run 4 `best_yolov5s.pt` | Inference weights |
+| `HAZARD_DEFAULT_MODEL_ID` | `yolov5` | Default model in API |
 | `HAZARD_DATASET_ROOT` | `hazard_dataset_clean/` | Dataset override |
 | `HAZARD_DEVICE` | `0` | CUDA device or `cpu` |
 | `PORT` | `8000` | API port |
