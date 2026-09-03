@@ -534,6 +534,7 @@ Hazard_Waste_Detection/
 
 | Document | Purpose |
 |----------|---------|
+| [docs/Hazard_Waste_Detection_Project_Guide.pdf](docs/Hazard_Waste_Detection_Project_Guide.pdf) | **Project guide PDF** (problem, architecture, CLI, structure) |
 | [docs/PROJECT_PROPOSAL.md](docs/PROJECT_PROPOSAL.md) | Full proposal (sections 1–11) |
 | [docs/PROJECT_ARCHITECTURE.md](docs/PROJECT_ARCHITECTURE.md) | Architecture + step-by-step plan |
 | [docs/TASK_DELIVERABLES.md](docs/TASK_DELIVERABLES.md) | Tasks 2–6 deliverable checklist |
